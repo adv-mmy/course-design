@@ -10,7 +10,7 @@ bool PinStorage(char* pin,UserData* p);
 bool NumOfDiscountStorage(int numOfDis,UserData* p);
 bool UserTypeStorage(char* userType,UserData* p);
 bool PermissionStorage(bool permission,UserData* p);
-//bool VolumndStorage(float volume,PackageData* p);
+bool VolumeStorage(float volume,PackageData* p);
 bool WeightStorage(float weight,PackageData* p);
 bool InTimeStorage(char* inTime,PackageData* p);
 bool FeeStorage(float fee,PackageData* p);

@@ -16,101 +16,122 @@ void userLoginFlow();
 void userDashboard(UserData*);
 void adminDashboard(UserData*);
 
-// å…¨å±€ç³»ç»ŸçŠ¶æ€
+// È«¾ÖÏµÍ³×´Ì¬
 typedef struct{
     UserData* userList;
     PackageData* packageList;
-    InventoryManagement* inventory;
+    InventoryManagement* inventoryA; //·Ö³ÉÁ½¸ö»õ¼Ü£¬A´æ·Å´ıÈ¡»õÎï£¬B´æ·Å´ı¼Ä»õÎïºÍ×´Ì¬´íÎó»õÎï
+    InventoryManagement* inventoryB;
     int isRunning;
 }systemState;
 
 systemState appSystem;
-/*æ–‡ä»¶é¦–æ¬¡è½½å…¥æ—¶ï¼Œæ‰€æœ‰åŒ…è£¹çš„å–ä»¶ç å‡è®¾ç½®ä¸º00-000ï¼Œå¾…å–åŒ…è£¹åœ¨è¿›å…¥è´§æ¶åå†è¿›è¡Œåˆ†é…å–ä»¶ç */
-// ç³»ç»Ÿåˆå§‹åŒ–
+/*ÎÄ¼şÊ×´ÎÔØÈëÊ±£¬ËùÓĞ°ü¹üµÄÈ¡¼şÂë¾ùÉèÖÃÎª00-000£¬´ıÈ¡°ü¹üÔÚ½øÈë»õ¼ÜºóÔÙ½øĞĞ·ÖÅäÈ¡¼şÂë*/
+// ÏµÍ³³õÊ¼»¯
 void initSystem() {
+    appSystem.isRunning = 1;
     appSystem.userList=initUsers();
     appSystem.packageList=initPackages();
-    appSystem.inventory=createInventorySystem();
-    //åˆå§‹åŒ–ç³»ç»Ÿæ—¶å°†å…¨éƒ¨åŒ…è£¹æ”¾å…¥è´§æ¶
+    appSystem.inventoryA=createInventorySystem();
+    appSystem.inventoryB=createInventorySystem();
+    //³õÊ¼»¯ÏµÍ³Ê±½«È«²¿°ü¹ü·ÅÈë»õ¼Ü
     PackageData* enterInventoryPtr=appSystem.packageList;
-    while(enterInventoryPtr->nextPackageData!=NULL){
-        addParcelToInventory(appSystem.inventory, enterInventoryPtr);
-        enterInventoryPtr=enterInventoryPtr->nextPackageData;
+    while(enterInventoryPtr!=NULL){
+        if(enterInventoryPtr->packageStatus == pendingPickup || enterInventoryPtr->packageStatus == pickedUp){
+            addParcelToInventory(appSystem.inventoryA, enterInventoryPtr);
+            enterInventoryPtr=enterInventoryPtr->nextPackageData;
+        }else{
+            addParcelToInventory(appSystem.inventoryB, enterInventoryPtr);
+            enterInventoryPtr=enterInventoryPtr->nextPackageData;
+        }
     }
-
-    appSystem.isRunning = 1;
 }
 
-// ç³»ç»Ÿå…³é—­
+// ÏµÍ³¹Ø±Õ
 void shutdownSystem() {
     FILE* userDataFilePtr=fopen("user_data.txt", "w+");
     FILE* packageDataFilePtr=fopen("package_data.txt", "w+");
-    WriteUserToFile(userDataFilePtr, appSystem.userList);
-    WritePackageToFile(packageDataFilePtr, appSystem.packageList);
+    //Ğ´ÈëÎÄ¼şÊ±µ÷ÓÃµÄÖ¸Õë
+    UserData* curUser=appSystem.userList;
+    PackageData* curPackage=appSystem.packageList;
+    while(curUser!=NULL){
+        WriteUserToFile(userDataFilePtr, curUser);
+        curUser=curUser->nextUserData;
+    }
+    while(curPackage!=NULL){
+        WritePackageToFile(packageDataFilePtr, curPackage);
+        curPackage=curPackage->nextPackageData;
+    }
     fclose(userDataFilePtr);
     fclose(packageDataFilePtr);
     freeUsers(&appSystem.userList);
     freePackages(&appSystem.packageList);
-    freeInventory(appSystem.inventory);
+    freeInventory(appSystem.inventoryA);
+    freeInventory(appSystem.inventoryB);
 }
 
-// ä¸»äº¤äº’ç•Œé¢
+// Ö÷½»»¥½çÃæ
 void mainMenu() {
     while (appSystem.isRunning) {
-        printf("\n=== èœé¸Ÿé©¿ç«™ä¸»èœå• ===\n");
-        printf("1. ç”¨æˆ·ç™»å½•\n");
-        printf("2. ç”¨æˆ·æ³¨å†Œ\n");
-        printf("3. é€€å‡ºç³»ç»Ÿ\n");
-        printf("è¯·é€‰æ‹©æ“ä½œ: ");
+        printf("\n=== ²ËÄñæäÕ¾Ö÷²Ëµ¥ ===\n");
+        printf("1. ÓÃ»§µÇÂ¼\n");
+        printf("2. ÓÃ»§×¢²á\n");
+        printf("3. ÍË³öÏµÍ³\n");
+        printf("ÇëÑ¡Ôñ²Ù×÷: ");
 
         int choice;
         scanf("%d", &choice);
-        while(getchar() != '\n'); // æ¸…ç©ºè¾“å…¥ç¼“å†²åŒº
+        while(getchar() != '\n'); // Çå¿ÕÊäÈë»º³åÇø
 
         switch (choice) {
             case 1: userLoginFlow(); break;
             case 2: userRegisterFlow(&appSystem.userList); break;
             case 3: appSystem.isRunning = 0; break;
-            default: printf("æ— æ•ˆè¾“å…¥ï¼Œè¯·é‡æ–°é€‰æ‹©ï¼\n");
+            default: printf("ÎŞĞ§ÊäÈë£¬ÇëÖØĞÂÑ¡Ôñ£¡\n");
         }
+        system("cls");
     }
 }
 
-// ç”¨æˆ·ç™»å½•æµç¨‹
+// ÓÃ»§µÇÂ¼Á÷³Ì
 void userLoginFlow() {
     char account[UserNameLen], password[PinLen];
-    printf("è¯·è¾“å…¥ç”¨æˆ·å: \n");
+    printf("ÇëÊäÈëÓÃ»§Ãû: \n");
     fgets(account, UserNameLen, stdin);
-    printf("è¯·è¾“å…¥å¯†ç : \n");
+    account[strcspn(account, "\n")]='\0';    // ´¦Àí»»ĞĞ·û
+    printf("ÇëÊäÈëÃÜÂë: \n");
     fgets(password, PinLen, stdin);
+    password[strcspn(password, "\n")]='\0';   //´¦Àí»»ĞĞ·û
 
     UserData* user = authenticateUser(appSystem.userList, account, password);
-    if (user) {
+    if (user!=NULL) {
         if (user->permission) {
             adminDashboard(user);
         } else {
             userDashboard(user);
         }
     } else {
-        printf("è´¦å·æˆ–å¯†ç é”™è¯¯ï¼");
+        printf("ÕËºÅ»òÃÜÂë´íÎó£¡");
     }
+    getchar();
     return;
 }
 
-// ç”¨æˆ·åŠŸèƒ½é¢æ¿
+// ÓÃ»§¹¦ÄÜÃæ°å
 void userDashboard(UserData* user) {
     while (appSystem.isRunning) {
-        printf("\n=== ç”¨æˆ·é¢æ¿ [%s] ===\n", user->userName);
+        printf("\n=== ÓÃ»§Ãæ°å [%s] ===\n", user->userName);
         searchParcelInterface(user, appSystem.packageList);
-        printf("æ“ä½œï¼š\n");
-        printf("1. å¯„é€åŒ…è£¹\n");
-        printf("2. å–ä»¶\n");
-        printf("3. æŸ¥çœ‹å†å²åŒ…è£¹\n");
-        printf("4. ä¿®æ”¹ä¸ªäººä¿¡æ¯\n");   
-        printf("5. æ³¨é”€è´¦å·\n");
-        printf("6. è¿”å›ä¸»èœå•\n");
-        printf("7. é€€å‡ºç³»ç»Ÿ");
-        printf("è¯·é€‰æ‹©æ“ä½œ: ");
+        printf("\n");
+        printf("²Ù×÷£º\n");
+        printf("1. ¼ÄËÍ°ü¹ü\n");
+        printf("2. È¡¼ş\n");
+        printf("3. ²é¿´ÀúÊ·°ü¹ü\n");
+        printf("4. ĞŞ¸Ä¸öÈËĞÅÏ¢\n");   
+        printf("5. ×¢ÏúÕËºÅ\n");
+        printf("6. ·µ»ØÖ÷²Ëµ¥\n");
+        printf("7. ÍË³öÏµÍ³\n");
+        printf("ÇëÑ¡Ôñ²Ù×÷: \n");
 
         int choice;
         scanf("%d", &choice);
@@ -118,18 +139,20 @@ void userDashboard(UserData* user) {
         system("cls");
         switch (choice) {
             case 1: {
-                PackageData* p = createParcel(user);
-                addParcelToInventory(appSystem.inventory, p);
+                PackageData* p = createParcel(&appSystem.packageList, user);
+                addParcelToInventory(appSystem.inventoryB, p);                    //Ïò´ı¼ÄÇø¼ÓÈë°ü¹ü
                 break;
             }
-            case 2: getParcelFromInventory(user, appSystem.packageList); break;      //æŸ¥çœ‹æœ‰æ— å¾…å–åŒ…è£¹
+            case 2: getParcelFromInventory(user, appSystem.packageList); break;      //²é¿´ÓĞÎŞ´ıÈ¡°ü¹ü
             case 3: displayUserHistory(user, appSystem.packageList); break;
             case 4: modifyUserProfile(user); break;
-            case 5: deleteUser(&appSystem.userList, user->userName); break;
+            case 5: 
+                deleteUser(&appSystem.userList, user->userName);
+                return;
             case 6: return;
             case 7: appSystem.isRunning = 0; break;
             default: {
-                printf("æ— æ•ˆæ“ä½œï¼è¯·é‡æ–°è¾“å…¥é€‰é¡¹ï¼š\n");
+                printf("ÎŞĞ§²Ù×÷£¡ÇëÖØĞÂÊäÈëÑ¡Ïî£º\n");
                 scanf("%d", &choice);
                 while(getchar()!='\n');
             }
@@ -138,32 +161,38 @@ void userDashboard(UserData* user) {
     }
 }
 
-// ç®¡ç†å‘˜é¢æ¿
+// ¹ÜÀíÔ±Ãæ°å
 void adminDashboard(UserData* admin) {
     while (appSystem.isRunning) {
-        printf("å½“å‰ç®¡ç†å‘˜ï¼š");
+        printf("µ±Ç°¹ÜÀíÔ±£º");
         fputs(admin->name, stdout);
         printf("\n");
-        printf("\n=== ç®¡ç†æ§åˆ¶å° ===\n");
-        printf("1. æŸ¥çœ‹åº“å­˜çŠ¶æ€\n");           //æŒ‰é¡ºåºæ‰“å°å„è´§æ¶å½“å‰å‰©ä½™ç©ºé—´                                  
-        printf("2. åŒ…è£¹å¯„å‡ºç™»è®°\n");
-        printf("3. æ–°å…¥åº“åŒ…è£¹ç™»è®°\n");
-        printf("4. è¿”å›ä¸»èœå•\n");
-        printf("5. é€€å‡ºç³»ç»Ÿ");
-        printf("è¯·é€‰æ‹©æ“ä½œ: ");
+        printf("\n=== ¹ÜÀí¿ØÖÆÌ¨ ===\n");
+        printf("1. ²é¿´¿â´æ×´Ì¬\n");           //°´Ë³Ğò´òÓ¡¸÷»õ¼Üµ±Ç°Ê£Óà¿Õ¼ä                                  
+        printf("2. °ü¹ü¼Ä³öµÇ¼Ç\n");
+        printf("3. ĞÂÈë¿â°ü¹üµÇ¼Ç\n");
+        printf("4. ·µ»ØÖ÷²Ëµ¥\n");
+        printf("5. ÍË³öÏµÍ³\n");
+        printf("ÇëÑ¡Ôñ²Ù×÷: \n");
 
         int choice;
         scanf("%d", &choice);
         while(getchar() != '\n');
         system("cls");
         switch (choice) {
-            case 1: displayInventoryStatus(appSystem.inventory); break;
+            case 1: {
+                printf("´ıÈ¡Çø£º\n");
+                displayInventoryStatus(appSystem.inventoryA);
+                printf("\n´ı¼ÄÇø£º\n");
+                displayInventoryStatus(appSystem.inventoryB);
+                break;
+            }
             case 2: sentParcelRecording(&appSystem.packageList); break;
-            case 3: addNewParcelToList(&appSystem.packageList, appSystem.inventory); break;
+            case 3: addNewParcelToList(&appSystem.packageList, appSystem.inventoryA); break;    //Ïò´ıÈ¡Çø¼ÓÈëĞÂ°ü¹ü
             case 4: return;
             case 5: appSystem.isRunning = 0; break;
             default: {
-                printf("æ— æ•ˆæ“ä½œï¼è¯·é‡æ–°è¾“å…¥é€‰é¡¹ï¼š\n");
+                printf("ÎŞĞ§²Ù×÷£¡ÇëÖØĞÂÊäÈëÑ¡Ïî£º\n");
                 scanf("%d", &choice);
                 while(getchar()!='\n');
             }
@@ -176,6 +205,6 @@ int main() {
     initSystem();
     mainMenu();
     shutdownSystem();
-    printf("ç³»ç»Ÿå·²å®‰å…¨é€€å‡º\n");
-    return 0;
+    printf("ĞÅÏ¢´æ´¢Íê±Ï,µ¥»÷»Ø³µÒÔÍË³ö³ÌĞò\n");
+    while(getchar()=='\n')return 0;
 }
