@@ -117,7 +117,7 @@ PackageData* createParcel(UserData* user){
     user->numOfDiscount--;
   }
   //活动满减（每满20减2）
-  costOfMoney-=((int)costOfMoney/20)*2;
+  costOfMoney-=(int)(costOfMoney/20)*2;
 
   newPackage->fee=costOfMoney;
   printf("您的包裹所需运费为：%.2f元", costOfMoney);

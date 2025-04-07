@@ -11,7 +11,7 @@ InventoryManagement* createInventorySystem() {
     }
 
     inventory->totalShelves = 50;
-    inventory->warningThreshold = 0.2;
+    inventory->warningThreshold = 0.2f;
     inventory->shelves = NULL;
 
     ShelfNode* prev = NULL;
