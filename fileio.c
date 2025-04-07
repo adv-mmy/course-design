@@ -39,7 +39,7 @@ bool WritePackageToFile(FILE* fp, const PackageData* package) {
         NameLen-1, package->name,
         TimeLen-1 , package->inTime,
         package->fee,
-        LocationLen-1,package->location,
+        AddressLen-1,package->address,
     //    package->transportMode,
         PickupCodeLen-1, package->pickUpCode,
         PackageTypeToStr(package->packageType),

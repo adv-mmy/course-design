@@ -9,5 +9,6 @@
 
 void displayInventoryStatus(InventoryManagement* inventory);
 void sentParcelRecording(PackageData** packageList);
+void addNewParcelToList(PackageData** packageList, InventoryManagement* inventory);
 
 #endif

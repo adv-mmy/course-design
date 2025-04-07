@@ -104,10 +104,10 @@ return true;
 
 
 
-bool LocationStorage(char* location,PackageData* p){
-if(strlen(location)>=LocationLen)
+bool AddressStorage(char* address,PackageData* p){
+if(strlen(address)>=AddressLen)
     return false;
-strcpy(p->location,location);
+strcpy(p->address,address);
 return true;
 }
 

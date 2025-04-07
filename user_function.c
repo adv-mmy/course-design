@@ -5,9 +5,9 @@ PackageData* createParcel(UserData* user){
   newPackage->packageType=toSend;
   newPackage->packageStatus=pendingSend;
 
-  int choice;
+  int choice=0;
   float costOfMoney=0;
-  float weightOfPackage;
+  float weightOfPackage=0;
   char nameOfPackage[NameLen];
   
   //收件人姓名
@@ -155,7 +155,7 @@ void getParcelFromInventory(UserData* user, PackageData* packageList){
     printf("错误的取件码！");
     return;
   }else{
-    printf("找到包裹！请输入密码以取走包裹：\n");
+    printf("找到包裹！请输入您的密码以取走包裹：\n");
     char targetPassword[PinLen];
     fgets(targetPassword, PinLen, stdin);
     int passwordIsCorrect=0;
@@ -163,7 +163,7 @@ void getParcelFromInventory(UserData* user, PackageData* packageList){
       if(targetPassword==user->pin){
         passwordIsCorrect=1;
         tmpPtr->packageStatus=pickedUp;
-        printf("包裹已取出！");
+        printf("包裹已取出！\n");
       }else{
         printf("错误的密码！请重新输入：\n");
         fgets(targetPassword, PinLen, stdin);

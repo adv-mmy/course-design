@@ -4,7 +4,7 @@
 #define UserNameLen     21    
 #define PinLen          21
 #define TimeLen         11  
-#define LocationLen     51  
+#define AddressLen     51  
 #define UserPermission  0    
 #define AdminPermission 1     
 #define MaxPackages 2000 
@@ -68,7 +68,7 @@ typedef struct PackageData{
     float weight;
     char inTime[TimeLen];        //202X.XX.XX
     float fee;
-    char location[LocationLen];
+    char address[AddressLen];
     char pickUpCode[PickupCodeLen];
     enum PackageType packageType;
     enum PackageStatus packageStatus;

@@ -147,8 +147,9 @@ void adminDashboard(UserData* admin) {
         printf("\n=== 管理控制台 ===\n");
         printf("1. 查看库存状态\n");           //按顺序打印各货架当前剩余空间                                  
         printf("2. 包裹寄出登记\n");
-        printf("3. 返回主菜单\n");
-        printf("4. 退出系统");
+        printf("3. 新入库包裹登记\n");
+        printf("4. 返回主菜单\n");
+        printf("5. 退出系统");
         printf("请选择操作: ");
 
         int choice;
@@ -158,8 +159,9 @@ void adminDashboard(UserData* admin) {
         switch (choice) {
             case 1: displayInventoryStatus(appSystem.inventory); break;
             case 2: sentParcelRecording(&appSystem.packageList); break;
-            case 3: return;
-            case 4: appSystem.isRunning = 0; break;
+            case 3: addNewParcelToList(&appSystem.packageList, appSystem.inventory); break;
+            case 4: return;
+            case 5: appSystem.isRunning = 0; break;
             default: {
                 printf("无效操作！请重新输入选项：\n");
                 scanf("%d", &choice);
