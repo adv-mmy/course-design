@@ -1,12 +1,14 @@
 #ifndef INVENTORY_MANAGEMENT_H
 #define INVENTORY_MANAGEMENT_H
 
-#include"common_value.h"
+#include "common_value.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <malloc.h>
+#include <float.h>
 
-//è´§æ¶é“¾è¡¨
+//»õ¼ÜÁ´±í
 typedef struct shelfNode{
   PackageData* packagesOfThisLevel;
   int level;
@@ -15,16 +17,17 @@ typedef struct shelfNode{
   struct shelfNode* nextShelfNode;        
 }ShelfNode;
 
-/*è´§æ¶ç®¡ç†å‚æ•°ç»“æ„ä½“*/
+/*»õ¼Ü¹ÜÀí²ÎÊı½á¹¹Ìå*/
 typedef struct InventoryManagement {
-  ShelfNode* shelves;       // è´§æ¶é“¾è¡¨å¤´æŒ‡é’ˆ
-  int totalShelves;         // æ€»è´§æ¶æ•°ï¼ˆå›ºå®šä¸º50å±‚ï¼‰
-  float warningThreshold;   // è´§æ¶ç©ºé—´é¢„è­¦é˜ˆå€¼ï¼ˆå‰©ä½™10%æ—¶é¢„è­¦ï¼‰
+  ShelfNode* shelves;       // »õ¼ÜÁ´±íÍ·Ö¸Õë
+  int totalShelves;         // ×Ü»õ¼ÜÊı£¨¹Ì¶¨Îª50²ã£©
+  float warningThreshold;   // »õ¼Ü¿Õ¼äÔ¤¾¯ãĞÖµ£¨Ê£Óà10%Ê±Ô¤¾¯£©
 } InventoryManagement;
 
 InventoryManagement* createInventorySystem();
-ShelfNode* findBestFit(InventoryManagement* inv, float volume);
+ShelfNode* findBestShelf(InventoryManagement* inv, float volume);
 bool allocateShelf(InventoryManagement* inv, PackageData* parcel);
 void addParcelToInventory(InventoryManagement* inv, PackageData* parcel);
+void generatePickupCode(PackageData* parcel, ShelfNode* shelf);
 
 #endif

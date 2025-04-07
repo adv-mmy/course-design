@@ -6,12 +6,13 @@
 #include"common_value.h"
 #include"data_storage.h"
 #include"inventory_management.h"
+#include"fileio.h"
 
-//初始化系统
+//��ʼ��ϵͳ
 UserData* initUsers();
 PackageData* initPackages();
 
-//关闭系统
+//�ر�ϵͳ
 void freeUsers(UserData** userList);
 void freePackages(PackageData** packageList);
 void freeInventory(InventoryManagement* inventory);

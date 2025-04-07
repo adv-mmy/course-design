@@ -1,25 +1,19 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include"common_value.h"
-#include"data_storage.h"
-#include"inventory_management.h"
-#include"fileio.h"
 #include"system_initial_shutdown.h"
 
-//åˆå§‹åŒ–ç”¨æˆ·ä¿¡æ¯å­˜å‚¨é“¾è¡¨
+//³õÊ¼»¯ÓÃ»§ÐÅÏ¢´æ´¢Á´±í
 UserData* initUsers(){
-  FILE* fp=fopen("user_user_data.txt", "r");
+  FILE* fp=fopen("user_data.txt", "a+");
     if (fp == NULL) {
-        perror("ç”¨æˆ·ä¿¡æ¯åˆå§‹åŒ–å¤±è´¥ï¼"); 
+        perror("ÓÃ»§ÐÅÏ¢³õÊ¼»¯Ê§°Ü£¡"); 
         exit(0);
     }
-    UserData* head = NULL;      // é“¾è¡¨å¤´èŠ‚ç‚¹
-    UserData* current = NULL;   // å½“å‰èŠ‚ç‚¹
+    UserData* head = NULL;      // Á´±íÍ·½Úµã
+    UserData* current = NULL;   // µ±Ç°½Úµã
 
     while (!feof(fp)) {
         UserData* newNode = (UserData*)malloc(sizeof(UserData));
         if (!newNode) {
-            perror("å†…å­˜åˆ†é…å¤±è´¥");
+            perror("ÄÚ´æ·ÖÅäÊ§°Ü");
             fclose(fp);
             return head;
         }
@@ -28,16 +22,16 @@ UserData* initUsers(){
             newNode->nextUserData = NULL;
 
             if (head == NULL) {
-                // ç¬¬ä¸€ä¸ªèŠ‚ç‚¹
+                // µÚÒ»¸ö½Úµã
                 head = newNode;
                 current = head;
             } else {
-                // é“¾æŽ¥åˆ°é“¾è¡¨å°¾éƒ¨
+                // Á´½Óµ½Á´±íÎ²²¿
                 current->nextUserData = newNode;
                 current = current->nextUserData;
             }
         } else {
-            // è¯»å–å¤±è´¥æ—¶é‡Šæ”¾æ— æ•ˆèŠ‚ç‚¹
+            // ¶ÁÈ¡Ê§°ÜÊ±ÊÍ·ÅÎÞÐ§½Úµã
             free(newNode);
             continue;
         }
@@ -47,11 +41,11 @@ UserData* initUsers(){
     return head;
 }
 
-//åˆå§‹åŒ–åŒ…è£¹ä¿¡æ¯å­˜å‚¨é“¾è¡¨
+//³õÊ¼»¯°ü¹üÐÅÏ¢´æ´¢Á´±í
 PackageData* initPackages(){
-  FILE* fp=fopen("package_data.txt", "r");
+  FILE* fp=fopen("package_data.txt", "a+");
     if (fp == NULL) {
-        perror("åŒ…è£¹ä¿¡æ¯åˆå§‹åŒ–å¤±è´¥ï¼"); 
+        perror("°ü¹üÐÅÏ¢³õÊ¼»¯Ê§°Ü£¡"); 
         exit(0);
     }
     PackageData* head = NULL;
@@ -60,7 +54,7 @@ PackageData* initPackages(){
     while (!feof(fp)) {
         PackageData* newNode = (PackageData*)malloc(sizeof(PackageData));
         if (!newNode) {
-            perror("å†…å­˜åˆ†é…å¤±è´¥");
+            perror("ÄÚ´æ·ÖÅäÊ§°Ü");
             fclose(fp);
             return head;
         }
@@ -85,7 +79,7 @@ PackageData* initPackages(){
     return head;
 }
 
-//é‡Šæ”¾ç”¨æˆ·ä¿¡æ¯å­˜å‚¨ç©ºé—´
+//ÊÍ·ÅÓÃ»§ÐÅÏ¢´æ´¢¿Õ¼ä
 void freeUsers(UserData** userList) {
   UserData* current = *userList;
   while (current != NULL) {
@@ -93,10 +87,10 @@ void freeUsers(UserData** userList) {
       current = current->nextUserData;
       free(temp);
   }
-  *userList = NULL; // ç½®ç©ºå¤–éƒ¨å¤´æŒ‡é’ˆ
+  *userList = NULL; // ÖÃ¿ÕÍâ²¿Í·Ö¸Õë
 }
 
-//é‡Šæ”¾åŒ…è£¹ä¿¡æ¯å­˜å‚¨ç©ºé—´
+//ÊÍ·Å°ü¹üÐÅÏ¢´æ´¢¿Õ¼ä
 void freePackages(PackageData** packageList) {
   PackageData* current = *packageList;
   while (current != NULL) {
@@ -104,14 +98,14 @@ void freePackages(PackageData** packageList) {
       current = current->nextPackageData;
       free(temp);
   }
-  *packageList = NULL; // ç½®ç©ºå¤–éƒ¨å¤´æŒ‡é’ˆ
+  *packageList = NULL; // ÖÃ¿ÕÍâ²¿Í·Ö¸Õë
 }
 
-//é‡Šæ”¾è´§æž¶ç®¡ç†ä¿¡æ¯å­˜å‚¨ç©ºé—´
+//ÊÍ·Å»õ¼Ü¹ÜÀíÐÅÏ¢´æ´¢¿Õ¼ä
 void freeInventory(InventoryManagement* inventory){
   ShelfNode* tmpPtr=inventory->shelves, *freePtr=inventory->shelves;
   while(freePtr!=NULL){
-    tmpPtr=inventory->shelves->nextShelfNode;
+    tmpPtr=tmpPtr->nextShelfNode;
     free(freePtr);
     freePtr=tmpPtr;
   }

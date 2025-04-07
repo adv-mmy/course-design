@@ -1,5 +1,6 @@
 #ifndef COMMON_VALUE_H
 #define COMMON_VALUE_H
+
 #define NameLen         11   
 #define UserNameLen     21    
 #define PinLen          21
@@ -8,42 +9,38 @@
 #define UserPermission  0    
 #define AdminPermission 1     
 #define MaxPackages 2000 
-#define PickupCodeLen 6 
+#define PickupCodeLen 9 
 #define NumOfShelves 50
-#define ShelvesLen 2 //å¯¹äºå­—ç¬¦ä¸²é•¿åº¦çš„å®šä¹‰å…¶å®åº”è¯¥æ˜¯å®šä¹‰çš„é•¿åº¦å‡1ï¼Œä½†æ˜¯å­—ç¬¦ä¸²è¦å­˜ä¸€ä¸ª'/0'
+#define ShelvesLen 2 //¶ÔÓÚ×Ö·û´®³¤¶ÈµÄ¶¨ÒåÆäÊµÓ¦¸ÃÊÇ¶¨ÒåµÄ³¤¶È¼õ1£¬µ«ÊÇ×Ö·û´®Òª´æÒ»¸ö'/0'
+
 #include <stdbool.h>
 
 extern const char* userTypeStr[] ;
 extern const char* packageTypeStr[] ;
 extern const char* packageStatusStr[];
 extern const char* packageSizeStr[] ;
-/*å£°æ˜å…¨å±€å˜é‡ï¼Œé˜²æ­¢å¼•ç”¨ä¸åŒå¤´æ–‡ä»¶åˆ°ä¸»å‡½æ•°æ—¶é€ æˆå¤šæ¬¡å®šä¹‰æŠ¥é”™*/
+/*ÉùÃ÷È«¾Ö±äÁ¿£¬·ÀÖ¹ÒıÓÃ²»Í¬Í·ÎÄ¼şµ½Ö÷º¯ÊıÊ±Ôì³É¶à´Î¶¨Òå±¨´í*/
 
-enum PackageType{      //åŒ…è£¹ç±»å‹
-    toPickup,          //å–ä»¶
-    toSend,            //å¯„ä»¶
+enum PackageType{      //°ü¹üÀàĞÍ
+    toPickup,          //È¡¼ş
+    toSend,            //¼Ä¼ş
     wrong2
 } ;
 
-enum PackageStatus{       //åŒ…è£¹å½“å‰çŠ¶æ€
-    pendingPickup,        //å¾…å–
-    pickedUp,             //å·²å–
-    pendingSend,          //å¾…å¯„
-    sent,                 //å·²å¯„;
+enum PackageStatus{       //°ü¹üµ±Ç°×´Ì¬
+    pendingPickup,        //´ıÈ¡
+    pickedUp,             //ÒÑÈ¡
+    pendingSend,          //´ı¼Ä
+    sent,                 //ÒÑ¼Ä;
     wrong4
 };
 
-/*typedef enum{           //ç»“è´¹æ–¹å¼
-    CushPay,              //ç°é‡‘
-    OnlinePay,            //çº¿ä¸Šä»˜æ¬¾
-}  FeeMethod;*/
-
-enum PackageSize{         //åŒ…è£…ç±»å‹
-    mail,                 //é‚®ä»¶
-    small,                //å°åŒ…è£…
-    medium,               //ä¸­åŒ…è£…
-    large,                //å¤§åŒ…è£…
-    extraLarge,           //ç‰¹å¤§åŒ…è£…
+enum PackageSize{         //°ü×°ÀàĞÍ
+    mail,                 //ÓÊ¼ş
+    small,                //Ğ¡°ü×°
+    medium,               //ÖĞ°ü×°
+    large,                //´ó°ü×°
+    extraLarge,           //ÌØ´ó°ü×°
     wrong5
 };
 
@@ -52,24 +49,21 @@ enum PackageSize{         //åŒ…è£…ç±»å‹
 
 typedef struct Userdata{
     char name[NameLen];           
-    char userName[UserNameLen];    //åŒºåˆ†è¿™ä¸¤ä¸ªå˜é‡ï¼Œnameæ˜¯çœŸå®å§“å,userNameæ˜¯è´¦å·åï¼Œä»…ç”¨äºç™»å½•
+    char userName[UserNameLen];    //Çø·ÖÕâÁ½¸ö±äÁ¿£¬nameÊÇÕæÊµĞÕÃû,userNameÊÇÕËºÅÃû£¬½öÓÃÓÚµÇÂ¼
     char pin[PinLen];              
     bool permission;
     enum UserType userType;         
     int numOfDiscount;
     struct Userdata* nextUserData;  
-    struct PackageData* nextPackageData;
-
 } UserData;
 
 typedef struct PackageData{
     float volume;  
     char name[NameLen];           
     float weight;
-    char inTime[TimeLen];        //202X.XX.XX
     float fee;
     char address[AddressLen];
-    char pickUpCode[PickupCodeLen];
+    char pickUpCode[PickupCodeLen];      //´ıÈ¡°ü¹üµÄÕâ¸öÊÇÈ¡¼şÂë£¬´ı¼Ä°ü¹üµÄÕâ¸öÊÇµ¥ºÅ
     enum PackageType packageType;
     enum PackageStatus packageStatus;
     enum PackageSize packageSize;
@@ -78,10 +72,9 @@ typedef struct PackageData{
 }PackageData;
 #endif
 
-/*å†™å‡ ä¸ªåŒ…è£¹å’Œä¸ªäººä¿¡æ¯çš„èŒƒä¾‹ï¼Œä½ ä»¬è¿˜èƒ½çœ‹æ˜ç™½
-@U John  johndoe  pass123  0  student  3      // ç”¨æˆ·æ•°æ® ä»¥@U(å¤§å†™)å¼€å¤´åšæ ‡å¿—
-@P 2.3  A  15.0  truck  ABC1  toPickup  pendingPickup  small  // åŒ…è£¹1  @P(å¤§å†™)å¼€å¤´åšæ ‡å¿—
-@P 5.0  B  20.0  plane  XYZ2  toSend  pent  medium // åŒ…è£¹2  æ ‡å¿—åŒä¸Š                                                            // ç©ºè¡Œ
-@U Alice  alice123  qwerty  1  teacher  1    // ä¸‹ä¸€ä¸ªç”¨æˆ·
-æŒ‰ç…§    ç”¨æˆ·ä¿¡æ¯â€”â€”>ç”¨æˆ·åŒ…è£¹ä¿¡æ¯â€”â€”â€”>ç”¨æˆ·åŒ…è£¹ä¿¡æ¯   ä¸‹ä¸€ä¸ªç”¨æˆ·ä¿¡æ¯       çš„æ–¹å¼å‚¨å­˜åœ¨æ–‡ä»¶é‡Œ
+/*Ğ´¼¸¸ö°ü¹üºÍ¸öÈËĞÅÏ¢µÄ·¶Àı£¬ÄãÃÇ»¹ÄÜ¿´Ã÷°×
+@U John  johndoe  pass123  0  student  3      // ÓÃ»§Êı¾İ ÒÔ@U(´óĞ´)¿ªÍ·×ö±êÖ¾
+@P John 2.3  2024.02.29 15.0  ·­¶·»¨Ô°  ABC1  toPickup  pendingPickup  small  // @P 2.3  A  15.0  truck  ABC1  toPickup  pendingPickup  small  // °ü¹ü1  @P(´óĞ´)¿ªÍ·×ö±êÖ¾
+@P 5.0  B  20.0  plane  XYZ2  toSend  pent  medium // °ü¹ü2  ±êÖ¾Í¬ÉÏ                                                            // ¿ÕĞĞ
+°ü¹üĞÅÏ¢   ÏÂÒ»¸öÓÃ»§ĞÅÏ¢       µÄ·½Ê½´¢´æÔÚÎÄ¼şÀï
 */

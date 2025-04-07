@@ -1,7 +1,12 @@
 #include"user_function.h"
 
-PackageData* createParcel(UserData* user){
+PackageData* createParcel(PackageData** packageList, UserData* user){
   PackageData* newPackage=(PackageData*)malloc(sizeof(PackageData));
+  if (!newPackage) {
+    perror("ÄÚ´æ·ÖÅäÊ§°Ü");
+    return NULL;
+  }
+  
   newPackage->packageType=toSend;
   newPackage->packageStatus=pendingSend;
 
@@ -10,18 +15,18 @@ PackageData* createParcel(UserData* user){
   float weightOfPackage=0;
   char nameOfPackage[NameLen];
   
-  //æ”¶ä»¶äººå§“å
-  printf("è¯·è¾“å…¥æ”¶ä»¶äººå§“åï¼š\n");
+  //ÊÕ¼şÈËĞÕÃû
+  printf("ÇëÊäÈëÊÕ¼şÈËĞÕÃû£º\n");
   fgets(nameOfPackage, NameLen, stdin);
   while(getchar()!='\n');
   strcpy(newPackage->name, nameOfPackage);
 
-  //æ ¹æ®åŒ…è£¹é‡é‡è®¡ç®—åŸºç¡€è¿è´¹
-  printf("è¯·è¾“å…¥åŒ…è£¹é‡é‡ï¼ˆkgï¼‰ï¼š\n");
+  //¸ù¾İ°ü¹üÖØÁ¿¼ÆËã»ù´¡ÔË·Ñ
+  printf("ÇëÊäÈë°ü¹üÖØÁ¿£¨kg£©£º\n");
   scanf("%f", &weightOfPackage);
   while(getchar()!='\n');
   while(weightOfPackage<=0){
-    printf("åŒ…è£¹é‡é‡ä¸åˆæ³•ï¼è¯·é‡æ–°è¾“å…¥ï¼š\n");    //é˜²æ­¢è¾“å…¥ä¸ºè´Ÿæ•°æˆ–0
+    printf("°ü¹üÖØÁ¿²»ºÏ·¨£¡ÇëÖØĞÂÊäÈë£º\n");    //·ÀÖ¹ÊäÈëÎª¸ºÊı»ò0
     scanf("%f", &weightOfPackage);
     while(getchar()!='\n');
   }
@@ -32,8 +37,8 @@ PackageData* createParcel(UserData* user){
     costOfMoney+=(10+(weightOfPackage-3)*1);
   }
   
-  //åŒ…è£…ç±»å‹
-  printf("è¯·è¾“å…¥éœ€è¦çš„åŒ…è£…ç‰©æ–™ç±»å‹ï¼š\n1.é‚®ä»¶ 2.å°åŒ…è£¹ 3.ä¸­åŒ…è£¹ 4.å¤§åŒ…è£¹ 5.ç‰¹å¤§åŒ…è£¹");
+  //°ü×°ÀàĞÍ
+  printf("ÇëÊäÈëĞèÒªµÄ°ü×°ÎïÁÏÀàĞÍ£º\n1.ÓÊ¼ş 2.Ğ¡°ü¹ü 3.ÖĞ°ü¹ü 4.´ó°ü¹ü 5.ÌØ´ó°ü¹ü");
   scanf("%d", &choice);
   while(getchar() != '\n');
   int choiceIsPass=0;
@@ -70,44 +75,86 @@ PackageData* createParcel(UserData* user){
         break;
       }
       default:{
-        printf("è¯·è¾“å…¥æ­£ç¡®çš„æ•°å­—ä»¥é€‰æ‹©åŒ…è£¹ç‰©æ–™ç±»å‹ï¼è¯·é‡æ–°è¾“å…¥ï¼š");
+        printf("ÇëÊäÈëÕıÈ·µÄÊı×ÖÒÔÑ¡Ôñ°ü¹üÎïÁÏÀàĞÍ£¡ÇëÖØĞÂÊäÈë£º");
         scanf("%d", &choice);
         while(getchar()!='\n');
       }
     }
   }
   
-  //æ–°å¢å–ä»¶åˆ°æ¥¼æœåŠ¡
+  //ĞÂÔöÈ¡¼şµ½Â¥·şÎñ
   int serviceChoice;
-  printf("æ˜¯å¦éœ€è¦å–ä»¶åˆ°æ¥¼æœåŠ¡ï¼Ÿè¯·è¾“å…¥æ•°å­—ä»¥é€‰æ‹©ï¼š\n1.æ˜¯ 2.å¦");
+  printf("ÊÇ·ñĞèÒªÈ¡¼şµ½Â¥·şÎñ£¿ÇëÊäÈëÊı×ÖÒÔÑ¡Ôñ£º\n1.ÊÇ 2.·ñ");
   scanf("%d", &serviceChoice);
   choiceIsPass=0;
   while(!choiceIsPass){
     switch (serviceChoice){
-    case 1:{
-      if(user->userType==student){
-        costOfMoney+=2;
-      }else if(user->userType==teacher){
-        costOfMoney+=1;
-      }else if(user->userType==others){
-        costOfMoney+=5;
+      case 1:{
+        if(user->userType==student){
+          costOfMoney+=2;
+        }else if(user->userType==teacher){
+          costOfMoney+=1;
+        }else if(user->userType==others){
+          costOfMoney+=5;
+        }
+        //Ô¤Ô¼È¡¼şÊ±¼ä
+        time_t now;
+        time(&now); // »ñÈ¡µ±Ç°Ê±¼ä´Á
+
+        // ¶ÁÈ¡ÓÃ»§ÊäÈë£¨¸ñÊ½£ºÔÂ/ÈÕ Ê±:·Ö£©
+        int month, day, hour, minute;
+        printf("ÇëÊäÈëÒ»¸öÄú·½±ãµÄÊ±¼ä£¬ÎÒÃÇ½«ÓÚÄÇÊ±ÉÏÃÅÈ¡¼ş£¨¸ñÊ½ MM/DD hh:mm£©£º");
+        scanf("%d/%d %d:%d", &month, &day, &hour, &minute);
+
+        // »ñÈ¡µ±Ç°Ê±¼äµÄ tm ½á¹¹Ìå
+        struct tm *current = localtime(&now);
+        struct tm target_tm = *current; // ¸´ÖÆµ±Ç°Ê±¼ä
+
+        // ÉèÖÃÊäÈëµÄÔÂ¡¢ÈÕ¡¢Ê±¡¢·Ö£¨×¢ÒâÔÂ·İ´Ó 0 ¿ªÊ¼£©
+        target_tm.tm_mon = month - 1;
+        target_tm.tm_mday = day;
+        target_tm.tm_hour = hour;
+        target_tm.tm_min = minute;
+        target_tm.tm_sec = 0; // ÃëÉèÎª 0
+
+        // ×ª»»Îª time_t Ê±¼ä´Á
+        time_t target_time = mktime(&target_tm);
+
+        // ´¦Àí¿çÄê£ºÈôÊäÈëÊ±¼äÒÑ¹ı£¬Ôò³¢ÊÔÏÂÒ»ÄêµÄÍ¬Ò»Ê±¼ä
+        if (target_time < now) {
+          target_tm.tm_year += 1; // Äê·İ +1
+          target_time = mktime(&target_tm);
+        }
+        // ¼ì²é×ª»»ºóµÄÔÂ·İºÍÈÕÆÚÊÇ·ñÓëÊäÈëµÄÒ»ÖÂ
+        if (target_tm.tm_mon + 1 != month || target_tm.tm_mday != day) {
+          printf("ÊäÈëµÄÈÕÆÚÎŞĞ§¡£\n");
+        }
+
+        // ±È½ÏÊ±¼ä
+        if (target_time == -1) {
+          printf("´íÎó£ºÎŞĞ§µÄÈÕÆÚ£¡\n");
+        } else if (target_time < now) {
+          printf("ÊäÈëµÄÊ±¼äÒÑ¹ı¡£\n");
+        } else {
+          printf("Ô¤Ô¼³É¹¦£¡\n");
+        }
+        choiceIsPass=1;
+        break;
       }
-      choiceIsPass=1;
-      break;
+      case 2:{
+        choiceIsPass=1;
+        break;
+      }
+      default:{               //ÈôÊäÈë·Ç·¨ÔòÑ­»·µ½»ñµÃ·ûºÏÒªÇóµÄÊäÈë
+        printf("ÇëÊäÈë1»ò2ÒÔÑ¡Ôñ£º");
+        scanf("%d", &serviceChoice);
+        while(getchar()!='\n');
+      }
     }
-    case 2:{
-      choiceIsPass=1;
-      break;
-    }
-    default:{               //è‹¥è¾“å…¥éæ³•åˆ™å¾ªç¯åˆ°è·å¾—ç¬¦åˆè¦æ±‚çš„è¾“å…¥
-      printf("è¯·è¾“å…¥1æˆ–2ä»¥é€‰æ‹©ï¼š");
-      scanf("%d", &serviceChoice);
-      while(getchar()!='\n');
-    }
-  }
   }
   
-  //æ–°ç”¨æˆ·æœ‰å…­æ¬¡ä¼˜æƒ 
+  
+  //ĞÂÓÃ»§ÓĞÁù´ÎÓÅ»İ
   if(user->numOfDiscount){
     if(user->userType==student){
       costOfMoney*=0.7;
@@ -116,22 +163,41 @@ PackageData* createParcel(UserData* user){
     }
     user->numOfDiscount--;
   }
-  //æ´»åŠ¨æ»¡å‡ï¼ˆæ¯æ»¡20å‡2ï¼‰
+  //»î¶¯Âú¼õ£¨Ã¿Âú20¼õ2£©
   costOfMoney-=(int)(costOfMoney/20)*2;
 
   newPackage->fee=costOfMoney;
-  printf("æ‚¨çš„åŒ…è£¹æ‰€éœ€è¿è´¹ä¸ºï¼š%.2få…ƒ", costOfMoney);
+  printf("ÄúµÄ°ü¹üËùĞèÔË·ÑÎª£º%.2fÔª", costOfMoney);
+  
+  //½«ĞÂ°ü¹ü¼ÓÈëµ½°ü¹üÁĞ±íÎ²²¿
+  if (*packageList == NULL) {
+    // Á´±íÎª¿Õ£¬Ö±½ÓÉèÖÃÎªÍ·½Úµã
+    *packageList = newPackage;
+  } else {
+    // ±éÀúµ½Á´±íÎ²²¿
+    PackageData* current = *packageList;
+    while (current->nextPackageData != NULL) {
+        current = current->nextPackageData;
+    }
+    current->nextPackageData = newPackage;
+  }
+  newPackage->nextPackageData = NULL; // Ã÷È·±ê¼ÇÎ²½Úµã
   
   return newPackage;
 }
 
 void searchParcelInterface(UserData* user, PackageData* packageList){
   PackageData* tmpPtr=packageList;
-  printf("è¿™äº›åŒ…è£¹å¯èƒ½æ˜¯æ‚¨çš„ï¼š\n");
-  while(tmpPtr->nextPackageData!=NULL){
+  int cnt=0;
+  printf("ÕâĞ©°ü¹ü¿ÉÄÜÊÇÄúµÄ£º\n");
+  while(tmpPtr!=NULL){
     if(user->name==tmpPtr->name && tmpPtr->packageStatus==pendingPickup){
       printf("%s\n", tmpPtr->pickUpCode);
+      cnt++;
     }
+  }
+  if(!cnt){
+    printf("\nÔİÎŞ´ıÈ¡°ü¹ü\n");
   }
   tmpPtr=NULL;
   free(tmpPtr);
@@ -140,11 +206,11 @@ void searchParcelInterface(UserData* user, PackageData* packageList){
 
 void getParcelFromInventory(UserData* user, PackageData* packageList){
   char targetPickUpCode[PickupCodeLen];
-  printf("è¯·è¾“å…¥å–ä»¶ç ï¼š\n");
+  printf("ÇëÊäÈëÈ¡¼şÂë£º\n");
   fgets(targetPickUpCode, PickupCodeLen, stdin);
   PackageData* tmpPtr=packageList;
   int targetIsFound=0;
-  while(tmpPtr->nextPackageData!=NULL){
+  while(tmpPtr!=NULL){
     if(tmpPtr->pickUpCode==targetPickUpCode){
       targetIsFound=1;
       break;
@@ -152,10 +218,10 @@ void getParcelFromInventory(UserData* user, PackageData* packageList){
     tmpPtr=tmpPtr->nextPackageData;
   }
   if(!targetIsFound){
-    printf("é”™è¯¯çš„å–ä»¶ç ï¼");
+    printf("´íÎóµÄÈ¡¼şÂë£¡");
     return;
   }else{
-    printf("æ‰¾åˆ°åŒ…è£¹ï¼è¯·è¾“å…¥æ‚¨çš„å¯†ç ä»¥å–èµ°åŒ…è£¹ï¼š\n");
+    printf("ÕÒµ½°ü¹ü£¡ÇëÊäÈëÄúµÄÃÜÂëÒÔÈ¡×ß°ü¹ü£º\n");
     char targetPassword[PinLen];
     fgets(targetPassword, PinLen, stdin);
     int passwordIsCorrect=0;
@@ -163,9 +229,9 @@ void getParcelFromInventory(UserData* user, PackageData* packageList){
       if(targetPassword==user->pin){
         passwordIsCorrect=1;
         tmpPtr->packageStatus=pickedUp;
-        printf("åŒ…è£¹å·²å–å‡ºï¼\n");
+        printf("°ü¹üÒÑÈ¡³ö£¡\n");
       }else{
-        printf("é”™è¯¯çš„å¯†ç ï¼è¯·é‡æ–°è¾“å…¥ï¼š\n");
+        printf("´íÎóµÄÃÜÂë£¡ÇëÖØĞÂÊäÈë£º\n");
         fgets(targetPassword, PinLen, stdin);
       }
     }
@@ -174,28 +240,28 @@ void getParcelFromInventory(UserData* user, PackageData* packageList){
   free(tmpPtr);
   return;
 }
-//æŸ¥è¯¢æŸä½ç”¨æˆ·çš„å†å²å–å‡ºæˆ–å¯„å‡ºåŒ…è£¹å¹¶åˆ†ç±»æ˜¾ç¤º
+//²éÑ¯Ä³Î»ÓÃ»§µÄÀúÊ·È¡³ö»ò¼Ä³ö°ü¹ü²¢·ÖÀàÏÔÊ¾
 void displayUserHistory(UserData* user, PackageData* packageList){
   int choice;
-  printf("è¯·è¾“å…¥æ•°å­—ä»¥é€‰æ‹©æ‚¨è¦æŸ¥æ‰¾çš„è®°å½•ç±»å‹ï¼š1.æ”¶ä»¶ 2.å¯„ä»¶\n");
+  printf("ÇëÊäÈëÊı×ÖÒÔÑ¡ÔñÄúÒª²éÕÒµÄ¼ÇÂ¼ÀàĞÍ£º1.ÊÕ¼ş 2.¼Ä¼ş\n");
   scanf("%d", &choice);
   while(getchar()!='\n');
   PackageData* tmpPtr=packageList;
   int choiceIsPass=0;
   while(!choiceIsPass){
     switch(choice){
-      case 1:{    //æŸ¥è¯¢æ‰€æœ‰æ”¶åˆ°çš„åŒ…è£¹
+      case 1:{    //²éÑ¯ËùÓĞÊÕµ½µÄ°ü¹ü
         choiceIsPass=1;
-        printf("å¾…å–ä»¶ï¼š\n");
-        while(tmpPtr->nextPackageData!=NULL){
+        printf("´ıÈ¡¼ş£º\n");
+        while(tmpPtr!=NULL){
           if(tmpPtr->name== user->name && tmpPtr->packageStatus==pendingPickup){
             fputs(tmpPtr->pickUpCode, stdout);
             printf("\n");
           }
         }
         tmpPtr=packageList;
-        printf("å·²ç­¾æ”¶ï¼š\n");
-        while(tmpPtr->nextPackageData!=NULL){
+        printf("ÒÑÇ©ÊÕ£º\n");
+        while(tmpPtr!=NULL){
           if(tmpPtr->name== user->name && tmpPtr->packageStatus==pickedUp){
             fputs(tmpPtr->pickUpCode, stdout);
             printf("\n");
@@ -205,16 +271,16 @@ void displayUserHistory(UserData* user, PackageData* packageList){
       }
       case 2:{
         choiceIsPass=1;
-        printf("æœªå¯„å‡ºï¼š\n");
-        while(tmpPtr->nextPackageData!=NULL){
+        printf("Î´¼Ä³ö£º\n");
+        while(tmpPtr!=NULL){
           if(tmpPtr->name== user->name && tmpPtr->packageStatus==pendingSend){
             fputs(tmpPtr->pickUpCode, stdout);
             printf("\n");
           }
         }
         tmpPtr=packageList;
-        printf("å·²å¯„å‡ºï¼š\n");
-        while(tmpPtr->nextPackageData!=NULL){
+        printf("ÒÑ¼Ä³ö£º\n");
+        while(tmpPtr!=NULL){
           if(tmpPtr->name== user->name && tmpPtr->packageStatus==sent){
             fputs(tmpPtr->pickUpCode, stdout);
             printf("\n");
@@ -222,8 +288,8 @@ void displayUserHistory(UserData* user, PackageData* packageList){
         }
         break;
       }
-      default:{            //è‹¥è¾“å…¥éæ³•åˆ™å¾ªç¯åˆ°è·å¾—ç¬¦åˆè¦æ±‚çš„è¾“å…¥
-        printf("è¯·è¾“å…¥1æˆ–2ä»¥é€‰æ‹©ï¼š");
+      default:{            //ÈôÊäÈë·Ç·¨ÔòÑ­»·µ½»ñµÃ·ûºÏÒªÇóµÄÊäÈë
+        printf("ÇëÊäÈë1»ò2ÒÔÑ¡Ôñ£º");
         scanf("%d", &choice);
         while(getchar()!='\n');
       }
@@ -232,45 +298,48 @@ void displayUserHistory(UserData* user, PackageData* packageList){
   
   tmpPtr=NULL;
   free(tmpPtr);
-  return;
+  while(getchar()=='\n')return;
 }
 
 void modifyUserProfile(UserData* user){
   int choice=0;
   int choiceIsPass=0;
-  printf("è¯·è¾“å…¥è¾“å…¥æ•°å­—ä»¥é€‰æ‹©æ‚¨è¦ä¿®æ”¹çš„ä¿¡æ¯ï¼š1.ç”¨æˆ·å 2ï¼Œå¯†ç \n");
+  printf("ÇëÊäÈëÊäÈëÊı×ÖÒÔÑ¡ÔñÄúÒªĞŞ¸ÄµÄĞÅÏ¢£º1.ÓÃ»§Ãû 2£¬ÃÜÂë\n");
   scanf("%d", &choice);
   while(!choiceIsPass){
     switch (choice){
       case 1:{
         choiceIsPass=1;
-        printf("è¯·è¾“å…¥æ‚¨çš„æ–°ç”¨æˆ·åï¼ˆ21ä¸ªå­—ç¬¦ä»¥å†…ï¼‰ï¼š\n");
+        printf("ÇëÊäÈëÄúµÄĞÂÓÃ»§Ãû£¨21¸ö×Ö·ûÒÔÄÚ£©£º\n");
         fgets(user->userName, UserNameLen, stdin);
-        printf("æ‚¨çš„ç”¨æˆ·åä¿®æ”¹æˆåŠŸï¼");
+        user->userName[strcspn(user->userName,"\n")]='\0';
+        printf("ÄúµÄÓÃ»§ÃûĞŞ¸Ä³É¹¦£¡");
         break;
       }
       case 2:{
         choiceIsPass=1;
         char newPassword[PinLen], newPasswordConfirmer[PinLen];
-        printf("è¯·è¾“å…¥æ‚¨çš„æ–°å¯†ç ï¼ˆ21ä¸ªå­—ç¬¦ä»¥å†…ï¼‰ï¼š\n");
+        printf("ÇëÊäÈëÄúµÄĞÂÃÜÂë£¨21¸ö×Ö·ûÒÔÄÚ£©£º\n");
         fgets(newPassword, PinLen, stdin);
-        printf("è¯·å†æ¬¡è¾“å…¥å¯†ç ä»¥ç¡®è®¤ï¼š\n");
+        printf("ÇëÔÙ´ÎÊäÈëÃÜÂëÒÔÈ·ÈÏ£º\n");
         fgets(newPasswordConfirmer, PinLen, stdin);
         int confirmer=0;
         while(!confirmer){
           if(strcmp(newPassword, newPasswordConfirmer)==0){
             confirmer=1;
-            printf("æ‚¨çš„å¯†ç ä¿®æ”¹æˆåŠŸï¼");
+            newPassword[strcspn(newPassword, "\n")]='\0';
+            strcpy(user->pin, newPassword);
+            printf("ÄúµÄÃÜÂëĞŞ¸Ä³É¹¦£¡");
             break;
           }else{
-            printf("è¾“å…¥å¯†ç ä¸ç¬¦ï¼è¯·é‡æ–°è¾“å…¥ï¼š\n");
+            printf("ÊäÈëÃÜÂë²»·û£¡ÇëÖØĞÂÊäÈë£º\n");
             fgets(newPasswordConfirmer, PinLen, stdin);
           }
         }
         break;
       }
-      default:{               //è‹¥è¾“å…¥éæ³•åˆ™å¾ªç¯åˆ°è·å¾—ç¬¦åˆè¦æ±‚çš„è¾“å…¥
-        printf("è¯·è¾“å…¥1æˆ–2ä»¥é€‰æ‹©ï¼š\n");
+      default:{               //ÈôÊäÈë·Ç·¨ÔòÑ­»·µ½»ñµÃ·ûºÏÒªÇóµÄÊäÈë
+        printf("ÇëÊäÈë1»ò2ÒÔÑ¡Ôñ£º\n");
         scanf("%d", &choice);
         while(getchar()!='\n');
       }
@@ -278,14 +347,35 @@ void modifyUserProfile(UserData* user){
   } 
 }
 
-//æ³¨é”€è´¦å·
+//×¢ÏúÕËºÅ
 void deleteUser(UserData** userList, const char* userName) {
-    UserData* current = *userList;
+  int choice=1;
+  int choiceIsPass=0;
+  printf("ÄúÊÇ·ñÒª×¢ÏúÕËºÅ£¿ÊäÈë1ÒÔ¼ÌĞø£¬ÊäÈë0ÒÔ·µ»ØÓÃ»§²Ëµ¥£º\n");   //¸øºó»Ú»ú»á
+  scanf("%d", &choice);  
+  while(!choiceIsPass){
+    switch (choice){
+      case 1:{
+        choiceIsPass=1;
+        break;
+      }
+      case 0:{
+        return;
+      }
+      default:{               //ÈôÊäÈë·Ç·¨ÔòÑ­»·µ½»ñµÃ·ûºÏÒªÇóµÄÊäÈë
+        printf("ÇëÊäÈë1»ò0ÒÔÑ¡Ôñ£º\n");
+        scanf("%d", &choice);
+        while(getchar()!='\n');
+      }
+    }
+  } 
+
+  UserData* current = *userList;
     UserData* prev = NULL;
     while (current != NULL) {
         if (strcmp(current->userName, userName) == 0) {
             if (prev == NULL) {
-                *userList = current->nextUserData; // ä¿®æ”¹å¤´æŒ‡é’ˆ
+                *userList = current->nextUserData; // ĞŞ¸ÄÍ·Ö¸Õë
             } else {
                 prev->nextUserData = current->nextUserData;
             }

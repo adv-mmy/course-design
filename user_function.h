@@ -8,7 +8,7 @@
 #include<malloc.h>
 #include"common_value.h"
 
-PackageData* createParcel(UserData* user);
+PackageData* createParcel(PackageData** packageList, UserData* user);
 void searchParcelInterface(UserData* user, PackageData* packageList);
 void getParcelFromInventory(UserData* user, PackageData* packageList);
 void displayUserHistory(UserData* user, PackageData* packageList);

@@ -3,10 +3,10 @@
 #include"str_and_enum.h"
 const char* userTypeStr[] = {"student", "teacher", "others"};
 const char* packageTypeStr[] = {"toPickup", "toSend"};
-const char* packageStatusStr[] = {"pendingPickup", "pickedUp", "pendingSend", "pent"};
+const char* packageStatusStr[] = {"pendingPickup", "pickedUp", "pendingSend", "sent"};
 const char* packageSizeStr[] = {"pail", "small", "medium", "large", "extraLarge"};
-/*å¯¹äºå­—ç¬¦ä¸²è½¬æšä¸¾ç±»å‹çš„å‡½æ•°ï¼Œå¦‚æœå¾…è½¬æ¢çš„å­—ç¬¦ä¸²æ²¡æœ‰ä¸è®¾å®šçš„å¯¹åº”ï¼Œä¼šè¿”å›wrongX
-*Xå¯¹åº”çš„æ˜¯è¿™ä¸ªæŠ¥é”™åœ¨å…¶æ‰€å¯¹åº”çš„çš„æšä¸¾ç±»å‹çš„å˜é‡ä¸­çš„å€¼ï¼ˆæšä¸¾ç±»å‹æ²¡æœ‰åˆå§‹åŒ–ç¬¬ä¸€ä¸ªå…ƒç´ ä¸º0ï¼Œç¬¬nä¸ªå…ƒç´ ä¸ºn-1ï¼‰
+/*¶ÔÓÚ×Ö·û´®×ªÃ¶¾ÙÀàĞÍµÄº¯Êı£¬Èç¹û´ı×ª»»µÄ×Ö·û´®Ã»ÓĞÓëÉè¶¨µÄ¶ÔÓ¦£¬»á·µ»ØwrongX
+*X¶ÔÓ¦µÄÊÇÕâ¸ö±¨´íÔÚÆäËù¶ÔÓ¦µÄµÄÃ¶¾ÙÀàĞÍµÄ±äÁ¿ÖĞµÄÖµ£¨Ã¶¾ÙÀàĞÍÃ»ÓĞ³õÊ¼»¯µÚÒ»¸öÔªËØÎª0£¬µÚn¸öÔªËØÎªn-1£©
 */
 const char* UserTypeToStr(enum UserType userType) {
     return userTypeStr[userType];
