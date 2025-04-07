@@ -8,6 +8,6 @@
 #include"inventory_management.h"
 
 void displayInventoryStatus(InventoryManagement* inventory);
-void sentParcelRecording(PackageData* packageList);
+void sentParcelRecording(PackageData** packageList);
 
 #endif

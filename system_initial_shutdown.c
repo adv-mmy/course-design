@@ -98,9 +98,9 @@ void freeUsers(UserData** userList) {
 
 //释放包裹信息存储空间
 void freePackages(PackageData** packageList) {
-  UserData* current = *packageList;
+  PackageData* current = *packageList;
   while (current != NULL) {
-      UserData* temp = current;
+      PackageData* temp = current;
       current = current->nextPackageData;
       free(temp);
   }

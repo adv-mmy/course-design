@@ -47,6 +47,8 @@ void shutdownSystem() {
     FILE* packageDataFilePtr=fopen("package_data.txt", "w+");
     WriteUserToFile(userDataFilePtr, appSystem.userList);
     WritePackageToFile(packageDataFilePtr, appSystem.packageList);
+    fclose(userDataFilePtr);
+    fclose(packageDataFilePtr);
     freeUsers(&appSystem.userList);
     freePackages(&appSystem.packageList);
     freeInventory(appSystem.inventory);
@@ -155,7 +157,7 @@ void adminDashboard(UserData* admin) {
         system("cls");
         switch (choice) {
             case 1: displayInventoryStatus(appSystem.inventory); break;
-            case 2: sentParcelRecording(appSystem.packageList); break;
+            case 2: sentParcelRecording(&appSystem.packageList); break;
             case 3: return;
             case 4: appSystem.isRunning = 0; break;
             default: {
