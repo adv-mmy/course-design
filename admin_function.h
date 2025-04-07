@@ -8,7 +8,7 @@
 #include"inventory_management.h"
 
 void displayInventoryStatus(InventoryManagement* inventory);
-void sentParcelRecording(PackageData** packageList);
+void sentParcelRecording(PackageData** packageList, InventoryManagement* inventory);
 void addNewParcelToList(PackageData** packageList, InventoryManagement* inventory);
 
 #endif

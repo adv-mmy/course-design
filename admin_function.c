@@ -4,36 +4,38 @@ void displayInventoryStatus(InventoryManagement* inventory){
   ShelfNode* currentShelf=inventory->shelves;
   int cnt=0;
   while(currentShelf!=NULL){
-    printf("ç¬¬%då±‚å…±æœ‰åŒ…è£¹%dä»¶ï¼Œå‰©ä½™ç©ºé—´ï¼š%fm\n", currentShelf->level, currentShelf->packageCnt, currentShelf->remainSpace);
+    printf("µÚ%d²ã¹²ÓÐ°ü¹ü%d¼þ£¬Ê£Óà¿Õ¼ä£º%.2fm\n", currentShelf->level, currentShelf->packageCnt, currentShelf->remainSpace);
     cnt+=currentShelf->packageCnt;
+    currentShelf=currentShelf->nextShelfNode;
   }
-  printf("ä»“åº“å†…å…±æœ‰%dä»¶åŒ…è£¹\n", cnt);
+  printf("²Ö¿âÄÚ¹²ÓÐ%d¼þ°ü¹ü\n", cnt);
   currentShelf=NULL;
-  free(currentShelf);
-  return;
+  printf("µ¥»÷»Ø³µÒÔ½øÐÐÏÂÒ»²½²Ù×÷\n");
+  while(getchar()=='\n')return;
 }
 
-void sentParcelRecording(PackageData** packageList){
+void sentParcelRecording(PackageData** packageList, InventoryManagement* inventory){
   char sender[NameLen];
-  printf("è¯·è¾“å…¥å¯„ä»¶äººå§“åï¼š\n");
+  printf("ÇëÊäÈë¼Ä¼þÈËÐÕÃû£º\n");
   fgets(sender, NameLen, stdin);
   
   PackageData* cur= *packageList;
   while(cur!=NULL){
     if(cur->packageStatus==pendingSend){
-      printf("å¯„å¾€%sçš„åŒ…è£¹\n", &cur->address);
+      printf("¼ÄÍù%sµÄ°ü¹ü\n", cur->address);
       int choice=0;
-      printf("é€‰æ‹©1ä»¥å‡ºåº“è¯¥åŒ…è£¹ï¼Œé€‰æ‹©0ä»¥è·³è¿‡è¯¥æ¡ä¿¡æ¯\n");
+      printf("Ñ¡Ôñ1ÒÔ³ö¿â¸Ã°ü¹ü£¬Ñ¡Ôñ0ÒÔÌø¹ý¸ÃÌõÐÅÏ¢\n");
       scanf("%d", &choice);
       getchar();
       while(1){
         if(choice==1){
           cur->packageStatus=sent;
+          replaceParcelFromInventory(cur, inventory);
           break;
         }else if(choice==0){
           break;
         }else{
-          printf("è¯·è¾“å…¥æ­£ç¡®çš„é€‰é¡¹ï¼\n");
+          printf("ÇëÊäÈëÕýÈ·µÄÑ¡Ïî£¡\n");
           scanf("%d", &choice);
           getchar();
         }
@@ -45,17 +47,24 @@ void sentParcelRecording(PackageData** packageList){
 
 void addNewParcelToList(PackageData** packageList, InventoryManagement* inventory){
   PackageData* newPackage = (PackageData*)malloc(sizeof(PackageData));
+  if (!newPackage) {
+    perror("ÄÚ´æ·ÖÅäÊ§°Ü");
+    return;
+  }
+  char defaultPickupCode[PickupCodeLen]="A-00-000";   //Èë¿âÊ±ÔÚÈ¡¼þÂë£¨µ¥ºÅ£©Î»ÖÃ·ÖÅäÕ¼Î»·û
   newPackage->nextPackageData=NULL;
   newPackage->packageStatus=pendingPickup;
   newPackage->fee=0;
+  strncpy(newPackage->pickUpCode, defaultPickupCode, PickupCodeLen - 1);
+  newPackage->pickUpCode[PickupCodeLen - 1] = '\0';
 
-  //æ”¶ä»¶äººå§“å
-  printf("è¯·è¾“å…¥æ”¶ä»¶äººå§“åï¼š\n");
+  //ÊÕ¼þÈËÐÕÃû
+  printf("ÇëÊäÈëÊÕ¼þÈËÐÕÃû£º\n");
   fgets(newPackage->name, NameLen, stdin);
 
-  //åŒ…è£…ç±»åž‹
+  //°ü×°ÀàÐÍ
   int choice=0;
-  printf("è¯·è¾“å…¥åŒ…è£¹çš„åŒ…è£…ç±»åž‹ï¼š\n1.é‚®ä»¶ 2.å°åŒ…è£¹ 3.ä¸­åŒ…è£¹ 4.å¤§åŒ…è£¹ 5.ç‰¹å¤§åŒ…è£¹");
+  printf("ÇëÊäÈë°ü¹üµÄ°ü×°ÀàÐÍ£º\n1.ÓÊ¼þ 2.Ð¡°ü¹ü 3.ÖÐ°ü¹ü 4.´ó°ü¹ü 5.ÌØ´ó°ü¹ü\n");
   scanf("%d", &choice);
   while(getchar() != '\n');
   int choiceIsPass=0;
@@ -87,11 +96,25 @@ void addNewParcelToList(PackageData** packageList, InventoryManagement* inventor
         break;
       }
       default:{
-        printf("è¯·è¾“å…¥æ­£ç¡®çš„æ•°å­—ä»¥é€‰æ‹©åŒ…è£¹ç±»åž‹ï¼è¯·é‡æ–°è¾“å…¥ï¼š");
+        printf("ÇëÊäÈëÕýÈ·µÄÊý×ÖÒÔÑ¡Ôñ°ü¹üÀàÐÍ£¡ÇëÖØÐÂÊäÈë£º\n");
         scanf("%d", &choice);
         while(getchar()!='\n');
       }
     }
   }
-  addParcelToInventory(inventory, packageList);
+  //½«ÐÂ°ü¹ü¼ÓÈëµ½°ü¹üÁÐ±íÎ²²¿
+  if (*packageList == NULL) {
+    // Á´±íÎª¿Õ£¬Ö±½ÓÉèÖÃÎªÍ·½Úµã
+    *packageList = newPackage;
+  } else {
+    // ±éÀúµ½Á´±íÎ²²¿
+    PackageData* current = *packageList;
+    while (current->nextPackageData != NULL) {
+        current = current->nextPackageData;
+    }
+    current->nextPackageData = newPackage;
+  }
+  newPackage->nextPackageData = NULL; // Ã÷È·±ê¼ÇÎ²½Úµã
+
+  addParcelToInventory(inventory, *packageList);
 }

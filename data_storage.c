@@ -1,15 +1,15 @@
 #include"data_storage.h"
 #include"str_and_enum.h"
-bool NameStorage(char* name,UserData* p){//å§“åå‚¨å­˜å‡½æ•°
-if(strlen(name)>=NameLen)//æ£€éªŒä¸€ä¸‹ç›®æ ‡å’Œæºå­—ç¬¦ä¸²é•¿åº¦ï¼Œè¶…é•¿è¿”å›flaseï¼Œflaseåæ€ä¹ˆæ“ä½œä½ è‡ªå·±çœ‹ç€åŠ
+
+bool NameStorage(char* name,UserData* p){//ĞÕÃû´¢´æº¯Êı
+if(strlen(name)>=NameLen)//¼ìÑéÒ»ÏÂÄ¿±êºÍÔ´×Ö·û´®³¤¶È£¬³¬³¤·µ»Øflase£¬flaseºóÔõÃ´²Ù×÷Äã×Ô¼º¿´×Å°ì
     return false;
 strcpy(p->name,name);
 return true;
 }
 
 
-
-bool UserNameStorage(char* userName,UserData* p){//ç”¨æˆ·æ˜µç§°å‚¨å­˜å‡½æ•°
+bool UserNameStorage(char* userName,UserData* p){//ÓÃ»§êÇ³Æ´¢´æº¯Êı
 if(strlen(userName)>=UserNameLen)
     return false;
 strcpy(p->userName,userName);
@@ -17,8 +17,7 @@ return true;
 }
 
 
-
-bool PinStorage(char* pin,UserData* p){//å¯†ç å‚¨å­˜å‡½æ•°
+bool PinStorage(char* pin,UserData* p){//ÃÜÂë´¢´æº¯Êı
 if(strlen(pin)>=PinLen)
     return false;
 strcpy(p->pin,pin);
@@ -26,25 +25,22 @@ return true;
 }
 
 
-
-
-bool UserTypeStorage(char* userType,UserData* p){//ç”¨æˆ·ç±»å‹å‚¨å­˜å‡½æ•°
+bool UserTypeStorage(char* userType,UserData* p){//ÓÃ»§ÀàĞÍ´¢´æº¯Êı
 for(int i=0;i<3;i++){
 if(strcmp(userType,userTypeStr[i])==0){
     p->userType=StrToUserType(userType);
-    return true;}}                       //æ£€éªŒä¸€ä¸‹ç”¨æˆ·è¾“å…¥çš„å­—ç¬¦ä¸²æ˜¯å¦æ­£ç¡®ï¼Œä¸æ­£ç¡®çš„è¯è¿”å›false
+    return true;}}                       //¼ìÑéÒ»ÏÂÓÃ»§ÊäÈëµÄ×Ö·û´®ÊÇ·ñÕıÈ·£¬²»ÕıÈ·µÄ»°·µ»Øfalse
 return false;
 }
 
 
-
-bool PermissionStorage(bool permission,UserData* p){//ç”¨æˆ·æƒé™å‚¨å­˜å‡½æ•°ï¼Œè¿™ä¸ªå‡½æ•°æ²¡ä»€ä¹ˆå†…å®¹ï¼Œå†™å‡ºæ¥å°±æ˜¯ä¸ºäº†ç”¨çš„æ—¶å€™å¯è¯»æ€§æ›´é«˜
+bool PermissionStorage(bool permission,UserData* p){//ÓÃ»§È¨ÏŞ´¢´æº¯Êı£¬Õâ¸öº¯ÊıÃ»Ê²Ã´ÄÚÈİ£¬Ğ´³öÀ´¾ÍÊÇÎªÁËÓÃµÄÊ±ºò¿É¶ÁĞÔ¸ü¸ß
 p->permission=permission;
 return true;
 }
 
 
-bool NumOfDiscountStorage(int numOfDiscount,UserData* p){//ä¼˜æƒ æ¬¡æ•°çš„å‚¨å­˜å‡½æ•°
+bool NumOfDiscountStorage(int numOfDiscount,UserData* p){//ÓÅ»İ´ÎÊıµÄ´¢´æº¯Êı
 if(numOfDiscount>5||numOfDiscount<0)
     return false;
 p->numOfDiscount=numOfDiscount;
@@ -52,22 +48,18 @@ return true;
 }
 
 
-
-
-
-/*bool VolumndStorage(float volume,PackageData* p){//åŒ…è£¹ä½“ç§¯çš„å‚¨å­˜
+bool VolumeStorage(float volume,PackageData* p){//°ü¹üÌå»ıµÄ´¢´æ
 float intpart=volume*100;
-if(volume<0.0||volume*100-intpart!=0)   //æ£€éªŒè¾“å…¥çš„ä½“ç§¯æ˜¯å¦æ˜¯ä¸€ä¸ªä¸¤ä½å°æ•°ï¼Œä¸æ˜¯ä¸¤ä½å°æ•°å°±è¿”å›falseï¼Œä¸å­˜å‚¨
+if(volume<0.0||volume*100-intpart!=0)   //¼ìÑéÊäÈëµÄÌå»ıÊÇ·ñÊÇÒ»¸öÁ½Î»Ğ¡Êı£¬²»ÊÇÁ½Î»Ğ¡Êı¾Í·µ»Øfalse£¬²»´æ´¢
     return false;
 p->volume=volume;
 return true;
-}*/
+}
 
 
-
-bool WeightStorage(float weight,PackageData* p){//åŒ…è£¹é‡é‡çš„å‚¨å­˜
+bool WeightStorage(float weight,PackageData* p){//°ü¹üÖØÁ¿µÄ´¢´æ
 float intpart=weight*100;
-if(weight<0.0||weight*100-intpart!=0)   //æ£€éªŒè¾“å…¥çš„ä½“ç§¯æ˜¯å¦æ˜¯ä¸€ä¸ªä¸¤ä½å°æ•°ï¼Œä¸æ˜¯ä¸¤ä½å°æ•°å°±è¿”å›falseï¼Œä¸å­˜å‚¨
+if(weight<0.0||weight*100-intpart!=0)   //¼ìÑéÊäÈëµÄÌå»ıÊÇ·ñÊÇÒ»¸öÁ½Î»Ğ¡Êı£¬²»ÊÇÁ½Î»Ğ¡Êı¾Í·µ»Øfalse£¬²»´æ´¢
     return false;
 p->weight=weight;
 return true;
@@ -75,33 +67,13 @@ return true;
 }
 
 
-
-bool InTimeStorage(char* inTime,PackageData* p){//å…¥åº“æ—¶é—´çš„å‚¨å­˜
-if(strlen(inTime)>=TimeLen)     //æ£€éªŒä¸€ä¸‹ç›®æ ‡å’Œæºå­—ç¬¦ä¸²é•¿åº¦ï¼Œè¶…é•¿è¿”å›flaseï¼Œflaseåæ€ä¹ˆæ“ä½œä½ è‡ªå·±çœ‹ç€åŠ
-    return false;
-strcpy(p->inTime,inTime);
-return true;
-}
-
-
-
-bool FeeStorage(float fee,PackageData* p){//åŒ…è£¹åº”ä»˜è´¹ç”¨çš„å‚¨å­˜
+bool FeeStorage(float fee,PackageData* p){//°ü¹üÓ¦¸¶·ÑÓÃµÄ´¢´æ
 int intpart=fee*100;
-if(fee<0.0||fee*100-intpart!=0)   //æ£€éªŒä¸€ä¸‹è´¹ç”¨æ˜¯ä¸æ˜¯ä¸¤ä½å°æ•°ï¼Œè¦æ˜¯å°æ•°ä½æ•°è¶…äº†å°±è¿”å›flase
-    return false;                 //ï¼ˆå› ä¸ºæœ‰æ»¡å‡å’Œæ–°ç”¨æˆ·æ‰“æŠ˜çš„ç¼˜æ•…ï¼Œè¦æ˜¯ç¨‹åºè®¡ç®—çš„æ—¶å€™ä¼šäº§ç”Ÿä¸‰ä½å°æ•°çš„è¯å°±è®©æˆ‘å†™ä¸ªå››èˆäº”å…¥ä¹‹ç±»çš„çš„æ”¾å‡½æ•°é‡Œé¢              
+if(fee<0.0||fee*100-intpart!=0)   //¼ìÑéÒ»ÏÂ·ÑÓÃÊÇ²»ÊÇÁ½Î»Ğ¡Êı£¬ÒªÊÇĞ¡ÊıÎ»Êı³¬ÁË¾Í·µ»Øflase
+    return false;                 //£¨ÒòÎªÓĞÂú¼õºÍĞÂÓÃ»§´òÕÛµÄÔµ¹Ê£¬ÒªÊÇ³ÌĞò¼ÆËãµÄÊ±ºò»á²úÉúÈıÎ»Ğ¡ÊıµÄ»°¾ÍÈÃÎÒĞ´¸öËÄÉáÎåÈëÖ®ÀàµÄµÄ·Åº¯ÊıÀïÃæ              
 p->fee=fee;
 return true;
 }
-
-
-
-/*bool TransportModeStorage(char* transportMode,PackageData* p){//åŒ…è£¹çš„è¿è¾“æ–¹å¼çš„å‚¨å­˜
-if(strlen(transportMode)>=NameLen)            //æ£€éªŒä¸€ä¸‹ç›®æ ‡å’Œæºå­—ç¬¦ä¸²é•¿åº¦ï¼Œè¶…é•¿è¿”å›flaseï¼Œflaseåæ€ä¹ˆæ“ä½œä½ è‡ªå·±çœ‹ç€åŠ
-    return false;
-strcpy(p->transportMode,transportMode);
-return true;
-}*/
-
 
 
 bool AddressStorage(char* address,PackageData* p){
@@ -112,39 +84,35 @@ return true;
 }
 
 
-
 bool PickUpCodeStorage(char* pickUpCode,PackageData* p){
-if(strlen(pickUpCode)!=(PickupCodeLen-1))     //æ£€éªŒå–è¯ç çš„é•¿åº¦ï¼Œé•¿åº¦å°±æ˜¯4ï¼Œä½ åˆ«å¤šè¾“äº†
+if(strlen(pickUpCode)!=(PickupCodeLen-1))     //¼ìÑéÈ¡Ö¤ÂëµÄ³¤¶È£¬³¤¶È¾ÍÊÇ4£¬Äã±ğ¶àÊäÁË
     return false;    
 return true;                         
 }
-
 
 
 bool PackageTypeStorage(char* packageType,PackageData* p){
 for(int i=0;i<2;i++){
 if(strcmp(packageType,packageTypeStr[i])==0){
     p->packageType=StrToPackageType(packageType);
-    return true;}}                     //æ£€éªŒä¸€ä¸‹ç”¨æˆ·è¾“å…¥çš„å­—ç¬¦ä¸²æ˜¯å¦æ­£ç¡®ï¼Œä¸æ­£ç¡®çš„è¯è¿”å›false
+    return true;}}                     //¼ìÑéÒ»ÏÂÓÃ»§ÊäÈëµÄ×Ö·û´®ÊÇ·ñÕıÈ·£¬²»ÕıÈ·µÄ»°·µ»Øfalse
 return false;
 }
-
 
 
 bool PackageStatusStorage(char* packageStatus,PackageData* p){
 for(int i=0;i<4;i++){
     if(strcmp(packageStatus,packageStatusStr[i])==0){
         p->packageStatus=StrToPackageStatus(packageStatus);
-        return true;}}                //æ£€éªŒä¸€ä¸‹ç”¨æˆ·è¾“å…¥çš„å­—ç¬¦ä¸²æ˜¯å¦æ­£ç¡®ï¼Œä¸æ­£ç¡®çš„è¯è¿”å›false
+        return true;}}                //¼ìÑéÒ»ÏÂÓÃ»§ÊäÈëµÄ×Ö·û´®ÊÇ·ñÕıÈ·£¬²»ÕıÈ·µÄ»°·µ»Øfalse
 return false;
 }
-
 
 
 bool PackageSize(char* packageSize,PackageData* p){
 for(int i=0;i<5;i++){
     if(strcmp(packageSize,packageSizeStr[i])==0){
         p->packageSize=StrToPackageSize(packageSize);
-        return true;}}                       //æ£€éªŒä¸€ä¸‹ç”¨æˆ·è¾“å…¥çš„å­—ç¬¦ä¸²æ˜¯å¦æ­£ç¡®ï¼Œä¸æ­£ç¡®çš„è¯è¿”å›false
+        return true;}}                       //¼ìÑéÒ»ÏÂÓÃ»§ÊäÈëµÄ×Ö·û´®ÊÇ·ñÕıÈ·£¬²»ÕıÈ·µÄ»°·µ»Øfalse
 return false;
 }

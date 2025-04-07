@@ -1,12 +1,12 @@
-// inventory.c åº“å­˜ç®¡ç†æ¨¡å—
+// inventory.c ¿â´æ¹ÜÀíÄ£¿é
 #include"inventory_management.h"
 
-//åˆå§‹åŒ–è´§æ¶ç®¡ç†é“¾è¡¨
+//³õÊ¼»¯»õ¼Ü¹ÜÀíÁ´±í
 InventoryManagement* createInventorySystem() {
-    // åŠ¨æ€åˆ†é… InventoryManagement ç»“æ„ä½“
+    // ¶¯Ì¬·ÖÅä InventoryManagement ½á¹¹Ìå
     InventoryManagement* inventory = (InventoryManagement*)malloc(sizeof(InventoryManagement));
     if (!inventory) {
-        perror("å†…å­˜åˆ†é…å¤±è´¥");
+        perror("ÄÚ´æ·ÖÅäÊ§°Ü");
         return NULL;
     }
 
@@ -18,8 +18,8 @@ InventoryManagement* createInventorySystem() {
     for (int level = 1; level <= 50; level++) {
         ShelfNode* newNode = (ShelfNode*)malloc(sizeof(ShelfNode));
         if (!newNode) {
-            perror("å†…å­˜åˆ†é…å¤±è´¥");
-            // æ¸…ç†å·²åˆ†é…çš„å†…å­˜
+            perror("ÄÚ´æ·ÖÅäÊ§°Ü");
+            // ÇåÀíÒÑ·ÖÅäµÄÄÚ´æ
             while (inventory->shelves != NULL) {
                 ShelfNode* temp = inventory->shelves;
                 inventory->shelves = inventory->shelves->nextShelfNode;
@@ -29,14 +29,14 @@ InventoryManagement* createInventorySystem() {
             return NULL;
         }
 
-        // åˆå§‹åŒ–èŠ‚ç‚¹å­—æ®µ
+        // ³õÊ¼»¯½Úµã×Ö¶Î
         newNode->level = level;
-        newNode->remainSpace = 2.0f; // è´§æ¶æœ€å¤§å®¹é‡ä¸º2.0
-        newNode->packagesOfThisLevel = NULL; // åˆå§‹åŒ–ä¸ºç©ºåŒ…è£¹åˆ—è¡¨
+        newNode->remainSpace = 2.0f; // »õ¼Ü×î´óÈİÁ¿Îª2.0
+        newNode->packagesOfThisLevel = NULL; // ³õÊ¼»¯Îª¿Õ°ü¹üÁĞ±í
         newNode->nextShelfNode = NULL;
-        newNode->packageCnt = 0; // åˆå§‹åŒ–åŒ…è£¹æ•°é‡ 
+        newNode->packageCnt = 0; // ³õÊ¼»¯°ü¹üÊıÁ¿ 
         
-        // é“¾æ¥åˆ°é“¾è¡¨
+        // Á´½Óµ½Á´±í
         if (prev == NULL) {
             inventory->shelves = newNode;
         } else {
@@ -48,46 +48,79 @@ InventoryManagement* createInventorySystem() {
     return inventory;
 }
 
-// æœ€ä½³é€‚åº”ç®—æ³•å®ç°
-ShelfNode* findBestFit(InventoryManagement* inv, float volume) {
-    ShelfNode* best = NULL;
-    ShelfNode* p = inv->shelves;
-    float minRemaining = 2.0f; // è´§æ¶æœ€å¤§å®¹é‡
+// ×î¼ÑÊÊÓ¦Ëã·¨ÊµÏÖ
+ShelfNode* findBestShelf(InventoryManagement* inventory, float volume) {
+    ShelfNode* bestShelf = NULL;
+    ShelfNode* curShelf = inventory->shelves;
+    float minRemaining = FLT_MAX; // ³õÊ¼»¯Îª¼«´óÖµ
 
-    while (p != NULL) {
-        if (p->remainSpace >= volume && p->remainSpace < minRemaining) {
-            best = p;
-            minRemaining = p->remainSpace;
+    while (curShelf != NULL) {
+        // Ê£Óà¿Õ¼äĞè×ã¹»ÈİÄÉ°ü¹ü£¬ÇÒ¾¡¿ÉÄÜĞ¡
+        if (curShelf->remainSpace >= volume && curShelf->remainSpace < minRemaining) {
+            bestShelf = curShelf;
+            minRemaining = curShelf->remainSpace;
         }
-        p = p->nextShelfNode;
+        curShelf = curShelf->nextShelfNode;
     }
-    return best;
+    return bestShelf;
 }
 
-// å…¥åº“æ—¶çš„ç©ºé—´åˆ†é…
-bool allocateShelf(InventoryManagement* inv, PackageData* parcel) {
-    ShelfNode* targetShelf = findBestFit(inv, parcel->volume);
+// Èë¿âÊ±µÄ¿Õ¼ä·ÖÅä
+bool allocateShelf(InventoryManagement* inventory, PackageData* parcel) {
+    ShelfNode* targetShelf = findBestShelf(inventory, parcel->volume);
     
     if (targetShelf != NULL) {
+        // 1. ¸üĞÂ»õ¼ÜÊ£Óà¿Õ¼ä
         targetShelf->remainSpace -= parcel->volume;
-        generatePickupCode(parcel, targetShelf->level);
+
+        // 2. ¸üĞÂ»õ¼Ü°ü¹ü¼ÆÊı
+        targetShelf->packageCnt++;
+        
+        // 3. Éú³ÉÈ¡¼şÂë²¢¹ØÁª»õ¼Ü
+        generatePickupCode(parcel, targetShelf); // ¼ÙÉè generatePickupCode ĞèÒª»õ¼Ü²ã¼¶
+
+        // 4. ½«°ü¹üÌí¼Óµ½»õ¼ÜµÄ°ü¹üÁ´±í
+        parcel->nextPackageData = targetShelf->packagesOfThisLevel;
+        targetShelf->packagesOfThisLevel = parcel;
+
         return true;
     }
-
-    return false; // ç©ºé—´ä¸è¶³
+    return false; // ¿Õ¼ä²»×ã
 }
 
 
-// åŒ…è£¹å…¥åº“æ¥å£
-void addParcelToInventory(InventoryManagement* inv, PackageData* parcel) {
+// °ü¹üÈë¿â½Ó¿Ú
+void addParcelToInventory(InventoryManagement* inventory, PackageData* parcel) {
+    //Èç¹ûÓĞÈ¡¼şÂë£¨²»ÊÇµÚÒ»´ÎÈë¿â£©¾ÍÌø¹ı
+    if(strcmp(parcel->pickUpCode, "0-00-000")!=0){
+        return;
+    }
     if (parcel->volume > 2.0f) {
-        printf("é”™è¯¯ï¼šåŒ…è£¹ä½“ç§¯è¶…è¿‡è´§æ¶æœ€å¤§å®¹é‡\n");
+        printf("´íÎó£º°ü¹üÌå»ı³¬¹ı»õ¼Ü×î´óÈİÁ¿£¨2.0m?£©\n");
         return;
     }
 
-    bool result = allocateShelf(inv, parcel);
+    bool result = allocateShelf(inventory, parcel);
     if (!result) {
-        printf("å¾ˆæŠ±æ­‰ï¼Œä»“åº“å·²æ»¡ï¼Œæš‚åœå¯„ä»¶\n");
+        printf("¾¯¸æ£º²Ö¿âÒÑÂú£¡\n");
     }
-    return;
+}
+//·ÖÅäÈ¡¼şÂë
+void generatePickupCode(PackageData* parcel, ShelfNode* shelf) {
+    // Ê¾Àı£ºÈ¡¼şÂë¸ñÊ½Îª "A-01-001"£¨»õ¼ÜÇøºÅ-²ã¼¶-ĞòºÅ£©
+    if(parcel->packageStatus == pendingPickup || parcel->packageStatus == pickedUp){
+        sprintf(parcel->pickUpCode, "A-%02d-%03d", shelf->level, shelf->packageCnt);
+    }else{
+        sprintf(parcel->pickUpCode, "B-%02d-%03d", shelf->level, shelf->packageCnt);
+    }
+}
+// °ü¹ü³ö¿âÊ±ĞŞ¸Ä»õ¼ÜÊ£Óà¿Õ¼ä
+void replaceParcelFromInventory(PackageData* parcel, InventoryManagement* inventory){
+    int targetShelfLevel = 0;
+    sscanf(parcel->pickUpCode, "%*c-%d-%*d", &targetShelfLevel);
+    ShelfNode* curShelf = inventory->shelves;
+    while(curShelf->level!=targetShelfLevel){
+        curShelf=curShelf->nextShelfNode;
+    }
+    curShelf->remainSpace+=parcel->volume;
 }

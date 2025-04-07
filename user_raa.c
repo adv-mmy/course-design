@@ -1,26 +1,27 @@
 #include"user_raa.h"
 
 void userRegisterFlow(UserData** userList) {
-    // 1. ä¸ºæ–°ç”¨æˆ·åŠ¨æ€åˆ†é…å†…å­˜
+    // 1. ÎªÐÂÓÃ»§¶¯Ì¬·ÖÅäÄÚ´æ
     UserData* newUser = (UserData*)malloc(sizeof(UserData));
     if (newUser == NULL) {
-        perror("å†…å­˜åˆ†é…å¤±è´¥");
-        exit(EXIT_FAILURE); // ä¸¥é‡é”™è¯¯ç›´æŽ¥é€€å‡º
+        perror("ÄÚ´æ·ÖÅäÊ§°Ü");
+        exit(EXIT_FAILURE); // ÑÏÖØ´íÎóÖ±½ÓÍË³ö
     }
-    memset(newUser, 0, sizeof(UserData)); // åˆå§‹åŒ–å†…å­˜ä¸º0
-
-    // 2. æƒé™é€‰æ‹©é€»è¾‘
+    memset(newUser, 0, sizeof(UserData)); // ³õÊ¼»¯ÄÚ´æÎª0
+    
+    newUser->numOfDiscount=6; //ÐÂÓÃ»§6´ÎÓÅ»Ý 
+    // 2. È¨ÏÞÑ¡ÔñÂß¼­
     int choosePermission;
-    printf("è¾“å…¥æ•°å­—ä»¥é€‰æ‹©è´¦å·ç±»åž‹ï¼š1.ç”¨æˆ· 2.ç®¡ç†å‘˜\n");
+    printf("\nÊäÈëÊý×ÖÒÔÑ¡ÔñÕËºÅÀàÐÍ£º1.ÓÃ»§ 2.¹ÜÀíÔ±\n");
     scanf("%d", &choosePermission);
-    if (choosePermission != 1 || choosePermission!=2){ // è¾“å…¥æ ¡éªŒ
-        printf("è¾“å…¥æ ¼å¼é”™è¯¯ï¼\n");
+    if (choosePermission != 1 && choosePermission!=2){ // ÊäÈëÐ£Ñé
+        printf("ÊäÈë¸ñÊ½´íÎó£¡\n");
         free(newUser);
         return;
     }
-    getchar(); // æ¸…é™¤è¾“å…¥ç¼“å†²åŒºçš„æ¢è¡Œç¬¦
+    getchar(); // Çå³ýÊäÈë»º³åÇøµÄ»»ÐÐ·û
 
-    // æƒé™æ ¡éªŒå¾ªçŽ¯
+    // È¨ÏÞÐ£ÑéÑ­»·
     while (1) {
         if (choosePermission == 1) {
             newUser->permission = UserPermission;
@@ -30,9 +31,10 @@ void userRegisterFlow(UserData** userList) {
             newUser->userType = others;
             break;
         } else {
-            printf("è¯·è¾“å…¥1æˆ–2ï¼š");
-            if (scanf("%d", &choosePermission) != 1) {
-                printf("è¾“å…¥æ ¼å¼é”™è¯¯ï¼\n");
+            printf("ÇëÊäÈë1»ò2£º");
+            scanf("%d", &choosePermission);
+            if (choosePermission != 1 && choosePermission!=2) {
+                printf("ÊäÈë¸ñÊ½´íÎó£¡\n");
                 free(newUser);
                 return;
             }
@@ -40,79 +42,93 @@ void userRegisterFlow(UserData** userList) {
         }
     }
 
-    // 3. è¾“å…¥ç”¨æˆ·åŸºæœ¬ä¿¡æ¯ï¼ˆå«æ¢è¡Œç¬¦å¤„ç†ï¼‰
-    printf("è¯·è¾“å…¥å§“åï¼ˆæœ€å¤š%då­—ç¬¦ï¼‰ï¼š\n", NameLen-1);
+    // 3. ÊäÈëÓÃ»§»ù±¾ÐÅÏ¢£¨º¬»»ÐÐ·û´¦Àí£©
+    printf("ÇëÊäÈëÐÕÃû£¨×î¶à%d×Ö·û£©£º\n", NameLen-1);
     fgets(newUser->name, NameLen, stdin);
-    newUser->name[strcspn(newUser->name, "\n")] = '\0'; // åŽ»é™¤æ¢è¡Œç¬¦
-
-    printf("è¯·è¾“å…¥è´¦æˆ·åï¼ˆæœ€å¤š%då­—ç¬¦ï¼‰ï¼š\n", UserNameLen-1);
+    newUser->name[strcspn(newUser->name, "\n")] = '\0'; // È¥³ý»»ÐÐ·û
+    
+    printf("ÇëÊäÈëÕË»§Ãû£¨×î¶à%d×Ö·û£©£º\n", UserNameLen-1);
     fgets(newUser->userName, UserNameLen, stdin);
     newUser->userName[strcspn(newUser->userName, "\n")] = '\0';
+    //ÖØ¸´×¢²á¼ì²â
+    UserData* judger = *userList;
+    while(judger!=NULL){
+        if(strcmp(newUser->name,judger->name)==0 || strcmp(newUser->userName,judger->userName)==0){
+            printf("¸ÃÕËºÅÐÅÏ¢ÒÑ´æÔÚ£¡\n");
+            free(newUser);
+            return;
+        }
+        judger=judger->nextUserData;
+    }
 
-    printf("è¯·è¾“å…¥å¯†ç ï¼ˆæœ€å¤š%då­—ç¬¦ï¼‰ï¼š\n", PinLen-1);
+    printf("ÇëÊäÈëÃÜÂë£¨×î¶à%d×Ö·û£©£º\n", PinLen-1);
     fgets(newUser->pin, PinLen, stdin);
     newUser->pin[strcspn(newUser->pin, "\n")] = '\0';
 
-    // 4. ç”¨æˆ·ç±»åž‹é€‰æ‹©ï¼ˆå¼ºåˆ¶ç®¡ç†å‘˜ä¸ºæ ¡å¤–äººå‘˜ï¼‰
+    // 4. ÓÃ»§ÀàÐÍÑ¡Ôñ£¨Ç¿ÖÆ¹ÜÀíÔ±ÎªÐ£ÍâÈËÔ±£©
     if(newUser->permission==UserPermission){
         int chooseUserType;
-        printf("é€‰æ‹©ç”¨æˆ·ç±»åž‹ï¼š1.å­¦ç”Ÿ 2.æ•™å¸ˆ 3.æ ¡å¤–äººå‘˜\n");
-        if (scanf("%d", &chooseUserType) != 1) {
-            printf("è¾“å…¥æ ¼å¼é”™è¯¯ï¼\n");
+        printf("Ñ¡ÔñÓÃ»§ÀàÐÍ£º1.Ñ§Éú 2.½ÌÊ¦ 3.Ð£ÍâÈËÔ±\n");
+        scanf("%d", &chooseUserType);
+        if (chooseUserType != 1 && chooseUserType != 2 && chooseUserType != 3) {
+            printf("ÊäÈë¸ñÊ½´íÎó£¡\n");
             free(newUser);
             return;
         }
         getchar();
-    
-        // ç”¨æˆ·ç±»åž‹æ ¡éªŒå¾ªçŽ¯
-        while (1) {
+        int typeJudger=0;
+        // ÓÃ»§ÀàÐÍÐ£ÑéÑ­»·
+        while (!typeJudger) {
             switch (chooseUserType) {
                 case 1:
                     newUser->userType = student;
+                    typeJudger=1;
                     break;
                 case 2:
                     newUser->userType = teacher;
+                    typeJudger=1;
                     break;
                 case 3:
                     newUser->userType = others;
+                    typeJudger=1;
                     break;
                 default:
-                    printf("è¯·è¾“å…¥1-3ï¼š");
+                    printf("ÇëÊäÈë1-3£º");
                     if (scanf("%d", &chooseUserType) != 1) {
-                        printf("è¾“å…¥æ ¼å¼é”™è¯¯ï¼\n");
+                        printf("ÊäÈë¸ñÊ½´íÎó£¡\n");
                         free(newUser);
                         return;
                     }
                     getchar();
-                    continue; // é‡æ–°å¾ªçŽ¯æ ¡éªŒ
+                    continue; // ÖØÐÂÑ­»·Ð£Ñé
             }
-            break;
         }
     }
 
-    // 5. å°†æ–°ç”¨æˆ·æ·»åŠ åˆ°é“¾è¡¨å°¾éƒ¨
+    // 5. ½«ÐÂÓÃ»§Ìí¼Óµ½Á´±íÎ²²¿
     if (*userList == NULL) {
-        // é“¾è¡¨ä¸ºç©ºï¼Œç›´æŽ¥è®¾ç½®ä¸ºå¤´èŠ‚ç‚¹
+        // Á´±íÎª¿Õ£¬Ö±½ÓÉèÖÃÎªÍ·½Úµã
         *userList = newUser;
     } else {
-        // éåŽ†åˆ°é“¾è¡¨å°¾éƒ¨
+        // ±éÀúµ½Á´±íÎ²²¿
         UserData* current = *userList;
         while (current->nextUserData != NULL) {
             current = current->nextUserData;
         }
         current->nextUserData = newUser;
     }
-    newUser->nextUserData = NULL; // æ˜Žç¡®æ ‡è®°å°¾èŠ‚ç‚¹
+    newUser->nextUserData = NULL; // Ã÷È·±ê¼ÇÎ²½Úµã
 
-    printf("æ³¨å†ŒæˆåŠŸï¼\n");
+    printf("×¢²á³É¹¦£¡\n");
 }
 
-//æ£€æŸ¥è¾“å…¥å¸å¯†æ˜¯å¦ä¸Žå·²æœ‰ç”¨æˆ·åŒ¹é…
+//¼ì²éÊäÈëÕÊÃÜÊÇ·ñÓëÒÑÓÐÓÃ»§Æ¥Åä
 UserData* authenticateUser(UserData* user, const char* account, const char* password){
     UserData* current = user;
     while(current!=NULL){
-        if(strcmp(account,current->userName)==0 && strcmp(password,current->pin)==0)
-        return current;
+        if(strcmp(account,current->userName)==0 && strcmp(password,current->pin)==0){
+            return current;
+        }
         current=current->nextUserData;
     }
     return NULL;
