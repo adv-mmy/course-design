@@ -1,0 +1,74 @@
+@startuml
+class UserAccount {
+    - name: char[50]
+    - account: char[20]
+    - password: char[20]
+    - permissionType: enum{Admin, User}
+    - userType: enum{Student, Staff, Outsider}
+    - isNewUser: bool
+    - orderCount: int
+    + next: UserAccount*
+    + createUserAccount()
+    + modifyUserInfo()
+    + calculateFinalDiscount(): float
+}
+
+class Parcel {
+    - parcelId: char[20]
+    - userName: char[50]
+    - weight: float
+    - volume: float
+    - inTime: struct tm
+    - parcelType: enum{Mail, Small, Medium, Large, XLarge}
+    - status: enum{PendingPickup, PendingSend, PickedUp, Sent}
+    - pickupCode: char[10]
+    - fee: float
+    + next: Parcel*
+    + calculateFee(UserAccount*)
+    + generatePickupCode(int)
+    + logStatusChange()
+}
+
+class InventoryManagement {
+    - shelves: ShelfNode*
+    + allocateShelf(Parcel*): bool
+    + optimizeSpaceAllocation()
+    + checkSaturation(): void
+    + updateShelfSpace(int, float)
+}
+
+class ShelfNode {
+    - level: int
+    - remainingSpace: float
+    + next: ShelfNode*
+}
+
+class SystemManager {
+    - userList: UserAccount*
+    - parcelList: Parcel*
+    - inventory: InventoryManagement*
+    - fileHandler: FileHandler*
+    - notification: Notification*
+    + calculateShippingFee(Parcel*): float
+    + handleParcelStatus(Parcel*)
+    + generateTimeRangeReport(time_t, time_t)
+}
+
+class FileHandler {
+    + saveUserData(UserAccount*)
+    + loadUserData(UserAccount**)
+    + logParcelStatus(Parcel*)
+    + saveInventoryData(ShelfNode*)
+}
+
+class Notification {
+    + sendReminder(UserAccount*, const char*)
+    + verifyPickupIdentity(UserAccount*, const char*): bool
+}
+
+SystemManager "1" --> "1" InventoryManagement : manages
+SystemManager "1" --> "1" FileHandler : uses
+SystemManager "1" --> "1" Notification : triggers
+UserAccount "1" --> "*" Parcel : owns
+InventoryManagement "1" --> "10" ShelfNode : contains
+@enduml
