@@ -211,7 +211,7 @@ void getParcelFromInventory(UserData* user, PackageData* packageList, InventoryM
   PackageData* tmpPtr=packageList;
   int targetIsFound=0;
   while(tmpPtr!=NULL){
-    if(tmpPtr->pickUpCode==targetPickUpCode){
+    if(strcmp(tmpPtr->pickUpCode, targetPickUpCode) == 0){
       targetIsFound=1;
       break;
     }
@@ -219,6 +219,7 @@ void getParcelFromInventory(UserData* user, PackageData* packageList, InventoryM
   }
   if(!targetIsFound){
     printf("错误的取件码！");
+    while(getchar()!='\n');
     return;
   }else{
     printf("找到包裹！请输入您的密码以取走包裹：\n");
@@ -283,6 +284,14 @@ void displayUserHistory(UserData* user, PackageData* packageList){
         printf("已寄出：\n");
         while(tmpPtr!=NULL){
           if(tmpPtr->name== user->name && tmpPtr->packageStatus==sent){
+            fputs(tmpPtr->pickUpCode, stdout);
+            printf("\n");
+          }
+        }
+        tmpPtr=packageList;
+        printf("已取消：\n");
+        while(tmpPtr!=NULL){
+          if(tmpPtr->name== user->name && tmpPtr->packageStatus==wrong4){
             fputs(tmpPtr->pickUpCode, stdout);
             printf("\n");
           }
