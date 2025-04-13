@@ -43,13 +43,15 @@ void userRegisterFlow(UserData** userList) {
     }
 
     // 3. 输入用户基本信息（含换行符处理）
-    printf("请输入姓名（最多%d字符）：\n", NameLen-1);
-    fgets(newUser->name, NameLen, stdin);
-    newUser->name[strcspn(newUser->name, "\n")] = '\0'; // 去除换行符
-    
-    printf("请输入账户名（最多%d字符）：\n", UserNameLen-1);
-    fgets(newUser->userName, UserNameLen, stdin);
-    newUser->userName[strcspn(newUser->userName, "\n")] = '\0';
+    if(StrInputValidation("姓名",NameLen,0,newUser->name)){
+        free(newUser);
+        return;
+    }
+    if(StrInputValidation("账户名",UserNameLen,0,newUser->userName))
+    {
+        free(newUser);
+        return;
+    };
     //重复注册检测
     UserData* judger = *userList;
     while(judger!=NULL){
@@ -60,11 +62,11 @@ void userRegisterFlow(UserData** userList) {
         }
         judger=judger->nextUserData;
     }
-
-    printf("请输入密码（最多%d字符）：\n", PinLen-1);
-    fgets(newUser->pin, PinLen, stdin);
-    newUser->pin[strcspn(newUser->pin, "\n")] = '\0';
-
+    if(StrInputValidation("密码",PinLen,1,newUser->pin))
+    {
+        free(newUser);
+        return;
+    };
     // 4. 用户类型选择（强制管理员为校外人员）
     if(newUser->permission==UserPermission){
         int chooseUserType;

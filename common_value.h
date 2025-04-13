@@ -1,11 +1,11 @@
 #ifndef COMMON_VALUE_H
 #define COMMON_VALUE_H
 
-#define NameLen         11   
-#define UserNameLen     21    
+#define NameLen         50   
+#define UserNameLen     50   
 #define PinLen          21
 #define TimeLen         11  
-#define AddressLen     51  
+#define AddressLen     100  
 #define UserPermission  0    
 #define AdminPermission 1     
 #define MaxPackages 2000 
@@ -69,12 +69,13 @@ typedef struct PackageData{
     enum PackageSize packageSize;
     struct PackageData* nextPackageData;
     
-}PackageData;
+}PackageData; 
 #endif
 
 /*写几个包裹和个人信息的范例，你们还能看明白
-@U John  johndoe  pass123  0  student  3      // 用户数据 以@U(大写)开头做标志
-@P John 2.3  2024.02.29 15.0  翻斗花园  ABC1  toPickup  pendingPickup  small  // @P 2.3  A  15.0  truck  ABC1  toPickup  pendingPickup  small  // 包裹1  @P(大写)开头做标志
-@P 5.0  B  20.0  plane  XYZ2  toSend  pent  medium // 包裹2  标志同上                                                            // 空行
+ John  johndoe  pass123  0  student  3      // 用户数据 以@U(大写)开头做标志
+ John 2.3  2024.02.29 15.0  翻斗花园  ABC1  toPickup  pendingPickup  small  
+ 2.3  A  15.0  truck  ABC1  toPickup  pendingPickup  small  // 包裹1  @P(大写)开头做标志
+ 5.0  B  20.0  plane  XYZ2  toSend  pent  medium // 包裹2  标志同上                                                            // 空行
 包裹信息   下一个用户信息       的方式储存在文件里
 */

@@ -2,7 +2,7 @@
 #include"inventory_management.h"
 
 //初始化货架管理链表
-InventoryManagement* createInventorySystem() {
+InventoryManagement* createInventorySystem(FILE* inventoryPtr) {
     // 动态分配 InventoryManagement 结构体
     InventoryManagement* inventory = (InventoryManagement*)malloc(sizeof(InventoryManagement));
     if (!inventory) {
@@ -29,20 +29,22 @@ InventoryManagement* createInventorySystem() {
             return NULL;
         }
 
-        // 初始化节点字段
-        newNode->level = level;
-        newNode->remainSpace = 2.0f; // 货架最大容量为2.0
-        newNode->packagesOfThisLevel = NULL; // 初始化为空包裹列表
-        newNode->nextShelfNode = NULL;
-        newNode->packageCnt = 0; // 初始化包裹数量 
+        if(ReadInventoryStatusFromFile(inventoryPtr, newNode)){
+            // 初始化节点字段
+            newNode->level = level;
+            newNode->nextShelfNode = NULL;
         
-        // 链接到链表
-        if (prev == NULL) {
-            inventory->shelves = newNode;
+            // 链接到链表
+            if (prev == NULL) {
+                inventory->shelves = newNode;
+            } else {
+                prev->nextShelfNode = newNode;
+            }
+            prev = newNode;
         } else {
-            prev->nextShelfNode = newNode;
+            perror("货架信息存在问题，请检查文件是否完整!"); 
+            exit(0);
         }
-        prev = newNode;
     }
 
     return inventory;
@@ -78,10 +80,6 @@ bool allocateShelf(InventoryManagement* inventory, PackageData* parcel) {
         
         // 3. 生成取件码并关联货架
         generatePickupCode(parcel, targetShelf); // 假设 generatePickupCode 需要货架层级
-
-        // 4. 将包裹添加到货架的包裹链表
-        parcel->nextPackageData = targetShelf->packagesOfThisLevel;
-        targetShelf->packagesOfThisLevel = parcel;
 
         return true;
     }

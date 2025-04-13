@@ -2,6 +2,7 @@
 #define INVENTORY_MANAGEMENT_H
 
 #include "common_value.h"
+#include "fileio.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,7 +11,6 @@
 
 //ªıº‹¡¥±Ì
 typedef struct shelfNode{
-  PackageData* packagesOfThisLevel;
   int level;
   int packageCnt; 
   float remainSpace; 
@@ -24,7 +24,7 @@ typedef struct InventoryManagement {
   float warningThreshold;   // ªıº‹ø’º‰‘§æØ„–÷µ£® £”‡10% ±‘§æØ£©
 } InventoryManagement;
 
-InventoryManagement* createInventorySystem();
+InventoryManagement* createInventorySystem(FILE* inventoryPtr);
 ShelfNode* findBestShelf(InventoryManagement* inv, float volume);
 bool allocateShelf(InventoryManagement* inv, PackageData* parcel);
 void addParcelToInventory(InventoryManagement* inv, PackageData* parcel);

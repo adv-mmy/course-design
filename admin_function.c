@@ -14,12 +14,12 @@ void displayInventoryStatus(InventoryManagement* inventory){
   while(getchar()=='\n')return;
 }
 
-void sentParcelRecording(PackageData** packageList, InventoryManagement* inventory){
+void sentParcelRecording(PackageData* packageList, InventoryManagement* inventory){
   char sender[NameLen];
   printf("请输入寄件人姓名：\n");
   fgets(sender, NameLen, stdin);
   
-  PackageData* cur= *packageList;
+  PackageData* cur= packageList;
   while(cur!=NULL){
     if(cur->packageStatus==pendingSend){
       printf("寄往%s的包裹\n", cur->address);
@@ -31,9 +31,9 @@ void sentParcelRecording(PackageData** packageList, InventoryManagement* invento
         if(choice==1){
           cur->packageStatus=sent;
           replaceParcelFromInventory(cur, inventory);
-          break;
+          continue;
         }else if(choice==0){
-          break;
+          continue;
         }else{
           printf("请输入正确的选项！\n");
           scanf("%d", &choice);
@@ -43,20 +43,29 @@ void sentParcelRecording(PackageData** packageList, InventoryManagement* invento
     }
     cur=cur->nextPackageData;
   }
+  printf("已展示该用户全部待寄包裹，单击回车以返回\n");
+  while(getchar()!='\n');
 }
-
+//手动添加新的待取包裹
 void addNewParcelToList(PackageData** packageList, InventoryManagement* inventory){
   PackageData* newPackage = (PackageData*)malloc(sizeof(PackageData));
   if (!newPackage) {
     perror("内存分配失败");
     return;
   }
-  char defaultPickupCode[PickupCodeLen]="A-00-000";   //入库时在取件码（单号）位置分配占位符
+  char defaultPickupCode[PickupCodeLen]="0-00-000";   //入库时在取件码（单号）位置分配占位符
+  char defaultAddress[AddressLen]="unknown";
+  
   newPackage->nextPackageData=NULL;
+  newPackage->packageType=toPickup;
   newPackage->packageStatus=pendingPickup;
   newPackage->fee=0;
+  newPackage->weight=0;
+
   strncpy(newPackage->pickUpCode, defaultPickupCode, PickupCodeLen - 1);
   newPackage->pickUpCode[PickupCodeLen - 1] = '\0';
+  strncpy(newPackage->address, defaultAddress, AddressLen-1);
+  newPackage->address[AddressLen-1] = '\0';
 
   //收件人姓名
   printf("请输入收件人姓名：\n");
@@ -102,6 +111,7 @@ void addNewParcelToList(PackageData** packageList, InventoryManagement* inventor
       }
     }
   }
+  newPackage->volume=PackageSizeToVolume(newPackage->packageSize);
   //将新包裹加入到包裹列表尾部
   if (*packageList == NULL) {
     // 链表为空，直接设置为头节点
@@ -109,12 +119,14 @@ void addNewParcelToList(PackageData** packageList, InventoryManagement* inventor
   } else {
     // 遍历到链表尾部
     PackageData* current = *packageList;
-    while (current->nextPackageData != NULL) {
+    while (current!= NULL) {
         current = current->nextPackageData;
     }
-    current->nextPackageData = newPackage;
+    current = newPackage;
   }
   newPackage->nextPackageData = NULL; // 明确标记尾节点
 
   addParcelToInventory(inventory, *packageList);
+  printf("入库成功！单击回车以返回\n");
+  while(getchar()!='\n');
 }

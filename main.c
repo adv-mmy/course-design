@@ -29,11 +29,15 @@ systemState appSystem;
 /*文件首次载入时，所有包裹的取件码均设置为00-000，待取包裹在进入货架后再进行分配取件码*/
 // 系统初始化
 void initSystem() {
+    FILE* inventoryAptr=fopen("inventoryA.txt", "a+");
+    FILE* inventoryBptr=fopen("inventoryB.txt", "a+");
     appSystem.isRunning = 1;
     appSystem.userList=initUsers();
     appSystem.packageList=initPackages();
-    appSystem.inventoryA=createInventorySystem();
-    appSystem.inventoryB=createInventorySystem();
+    appSystem.inventoryA=createInventorySystem(inventoryAptr);
+    appSystem.inventoryB=createInventorySystem(inventoryBptr);
+    fclose(inventoryAptr);
+    fclose(inventoryBptr);
     //初始化系统时将全部包裹放入货架
     PackageData* enterInventoryPtr=appSystem.packageList;
     while(enterInventoryPtr!=NULL){
@@ -51,9 +55,13 @@ void initSystem() {
 void shutdownSystem() {
     FILE* userDataFilePtr=fopen("user_data.txt", "w+");
     FILE* packageDataFilePtr=fopen("package_data.txt", "w+");
+    FILE* inventoryAptr=fopen("inventoryA.txt", "w+");
+    FILE* inventoryBptr=fopen("inventoryB.txt", "w+");
     //写入文件时调用的指针
     UserData* curUser=appSystem.userList;
     PackageData* curPackage=appSystem.packageList;
+    ShelfNode* curShelfOfA=appSystem.inventoryA->shelves;
+    ShelfNode* curShelfOfB=appSystem.inventoryB->shelves;
     while(curUser!=NULL){
         WriteUserToFile(userDataFilePtr, curUser);
         curUser=curUser->nextUserData;
@@ -61,6 +69,14 @@ void shutdownSystem() {
     while(curPackage!=NULL){
         WritePackageToFile(packageDataFilePtr, curPackage);
         curPackage=curPackage->nextPackageData;
+    }
+    while(curShelfOfA!=NULL){
+        WriteInventoryStatusToFile(inventoryAptr, curShelfOfA);
+        curShelfOfA=curShelfOfA->nextShelfNode;
+    }
+    while(curShelfOfB!=NULL){
+        WriteInventoryStatusToFile(inventoryBptr, curShelfOfB);
+        curShelfOfB=curShelfOfB->nextShelfNode;
     }
     fclose(userDataFilePtr);
     fclose(packageDataFilePtr);
@@ -87,7 +103,9 @@ void mainMenu() {
             case 1: userLoginFlow(); break;
             case 2: userRegisterFlow(&appSystem.userList); break;
             case 3: appSystem.isRunning = 0; break;
-            default: printf("无效输入，请重新选择！\n");
+            default: 
+                printf("无效输入，请重新选择！\n");
+                while(getchar()!='\n');
         }
         system("cls");
     }
@@ -121,16 +139,17 @@ void userLoginFlow() {
 void userDashboard(UserData* user) {
     while (appSystem.isRunning) {
         printf("\n=== 用户面板 [%s] ===\n", user->userName);
-        searchParcelInterface(user, appSystem.packageList);
+        searchParcelInterface(user, appSystem.packageList);        //查看有无待取包裹
         printf("\n");
         printf("操作：\n");
-        printf("1. 寄送包裹\n");
-        printf("2. 取件\n");
-        printf("3. 查看历史包裹\n");
-        printf("4. 修改个人信息\n");   
-        printf("5. 注销账号\n");
-        printf("6. 返回主菜单\n");
-        printf("7. 退出系统\n");
+        printf("1. 取件\n");
+        printf("2. 寄送包裹\n");
+        printf("3. 取消寄件\n");
+        printf("4. 查看历史包裹\n");
+        printf("5. 修改个人信息\n");   
+        printf("6. 注销账号\n");
+        printf("7. 返回主菜单\n");
+        printf("8. 退出系统\n");
         printf("请选择操作: \n");
 
         int choice;
@@ -138,22 +157,18 @@ void userDashboard(UserData* user) {
         while(getchar() != '\n');
         system("cls");
         switch (choice) {
-            case 1: {
-                PackageData* p = createParcel(&appSystem.packageList, user);
-                addParcelToInventory(appSystem.inventoryB, p);                    //向待寄区加入包裹
-                break;
-            }
-            case 2: getParcelFromInventory(user, appSystem.packageList, appSystem.inventoryA); break;      //查看有无待取包裹
-            case 3: displayUserHistory(user, appSystem.packageList); break;
-            case 4: modifyUserProfile(user); break;
-            case 5: 
+            case 1: getParcelFromInventory(user, appSystem.packageList, appSystem.inventoryA); break;     //取件
+            case 2: createParcel(&appSystem.packageList, user, appSystem.inventoryB); break;
+            case 3: cancelSending(user, &appSystem.packageList, appSystem.inventoryB); break; 
+            case 4: displayUserHistory(user, appSystem.packageList); break;
+            case 5: modifyUserProfile(user); break;
+            case 6: 
                 deleteUser(&appSystem.userList, user->userName);
                 return;
-            case 6: return;
-            case 7: appSystem.isRunning = 0; break;
+            case 7: return;
+            case 8: appSystem.isRunning = 0; break;
             default: {
-                printf("无效操作！请重新输入选项：\n");
-                scanf("%d", &choice);
+                printf("无效操作！请重新输入选项！\n");
                 while(getchar()!='\n');
             }
         }
@@ -187,13 +202,12 @@ void adminDashboard(UserData* admin) {
                 displayInventoryStatus(appSystem.inventoryB);
                 break;
             }
-            case 2: sentParcelRecording(&appSystem.packageList, appSystem.inventoryB); break;
+            case 2: sentParcelRecording(appSystem.packageList, appSystem.inventoryB); break;
             case 3: addNewParcelToList(&appSystem.packageList, appSystem.inventoryA); break;    //向待取区加入新包裹
             case 4: return;
             case 5: appSystem.isRunning = 0; break;
             default: {
-                printf("无效操作！请重新输入选项：\n");
-                scanf("%d", &choice);
+                printf("无效操作！请重新输入选项！\n");
                 while(getchar()!='\n');
             }
         }

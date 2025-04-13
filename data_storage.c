@@ -116,3 +116,80 @@ for(int i=0;i<5;i++){
         return true;}}                       //检验一下用户输入的字符串是否正确，不正确的话返回false
 return false;
 }
+
+
+//参数分别是输入字符串名称，控制长度，是否允许汉字，目标字符串地址
+bool StrInputValidation(const char* InputType,int InputLenth,int ValidationType,char* StrDestination){
+    printf("请输入%s：\n" ,InputType);
+    char inputStr[1024];
+            fgets(inputStr, 1024, stdin);
+    switch (ValidationType){
+    case 1:
+        while(1){
+            if(strcmp(inputStr,"-1\n")==0){
+                printf("按下回车以返回");
+                getchar();
+                while(getchar()!='\n');
+                return true;
+            }
+            int flag=0;
+            if(inputStr[0]=='\n'){//<-空输入检验
+                printf("你的输入呢？为什么我看不到？\n");
+                printf("请重新输入：\n");
+                fgets(inputStr, 1024, stdin);         
+                continue;
+            }
+            inputStr[strcspn(inputStr, "\n")] = '\0';
+
+            if(strlen(inputStr)>=InputLenth){//<-检验输入长度
+                printf("您的%s太长了，程序记不住哦o.0\n",InputType);
+                printf("请重新输入：\n");
+                fgets(inputStr, 1024, stdin);
+                continue;
+            }
+
+            for(int i=0;inputStr[i]!='\0';i++){//<-检验中文输入
+                if(inputStr[i]<=33||inputStr[i]>=126){
+                    printf("请不要输入全角字符，中文或空格，程序看不懂捏:->");
+                    printf("请重新输入：\n");
+                    fgets(inputStr, 1024, stdin);
+                    flag=1;
+                    break;
+                }
+            }
+            if(flag==1)
+                continue;
+            
+            strcpy(StrDestination,inputStr);
+            break;
+        }
+        break;
+    default:
+        while(1){
+            if(strcmp(inputStr,"-1\n")==0){
+                printf("按下回车以返回");
+                getchar();
+                while(getchar()!='\n');
+                return true;
+            }
+            if(strlen(inputStr)>=InputLenth){//<-检验输入长度
+                printf("您的%s太长了，程序记不住哦o.0\n",InputType);
+                printf("请重新输入：\n");
+                fgets(inputStr,1024, stdin);
+                continue;
+            }
+
+            if(inputStr[0]=='\n'){//<-空输入检验
+                printf("你的输入呢？为什么我看不到？\n");
+                printf("请重新输入：\n");
+                fgets(inputStr, 1024, stdin);         
+                continue;
+            }
+            inputStr[strcspn(inputStr, "\n")] = '\0';
+
+            strcpy(StrDestination,inputStr);
+            break;
+        }
+    }
+    return false;//不是-1返回假
+}
