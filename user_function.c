@@ -221,8 +221,7 @@ void searchParcelInterface(UserData* user, PackageData* packageList){
 
 void getParcelFromInventory(UserData* user, PackageData* packageList, InventoryManagement* inventory){
   char targetPickUpCode[PickupCodeLen];
-  printf("请输入取件码：\n");
-  fgets(targetPickUpCode, PickupCodeLen, stdin);
+  StrInputValidation("取件码", PickupCodeLen, 1, targetPickUpCode);
   PackageData* tmpPtr=packageList;
   int targetIsFound=0;
   while(tmpPtr!=NULL){
@@ -236,12 +235,12 @@ void getParcelFromInventory(UserData* user, PackageData* packageList, InventoryM
     printf("错误的取件码！\n");
     while(getchar()=='\n')return;
   }else{
-    printf("找到包裹！请输入您的密码以取走包裹：\n");
+    printf("找到包裹！请输入您的密码以取走包裹!\n");
     char targetPassword[PinLen];
-    fgets(targetPassword, PinLen, stdin);
+    StrInputValidation("您的密码", PinLen, 1, targetPassword);
     int passwordIsCorrect=0;
     while(!passwordIsCorrect){
-      if(targetPassword==user->pin){
+      if(strcmp(targetPassword, user->pin) == 0){
         passwordIsCorrect=1;
         tmpPtr->packageStatus=pickedUp;
         replaceParcelFromInventory(tmpPtr, inventory);
@@ -333,10 +332,8 @@ void cancelSending(UserData* user, PackageData** packageList, InventoryManagemen
   PackageData* current = *packageList;
   int found = 0;
 
-  printf("请输入您要取消的包裹的取件码：\n");
   char targetPickUpCode[PickupCodeLen];
-  fgets(targetPickUpCode, PickupCodeLen, stdin);
-  targetPickUpCode[strcspn(targetPickUpCode, "\n")] = 0; // 去掉换行符
+  StrInputValidation("您要取消的包裹的取件码", PickupCodeLen, 1, targetPickUpCode);
 
   while (current != NULL) {
     if (strcmp(current->name, user->name) == 0 && strcmp(current->pickUpCode, targetPickUpCode) == 0 && current->packageStatus == pendingSend) {

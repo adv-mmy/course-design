@@ -22,7 +22,7 @@ float PackageSizeToVolume(enum PackageSize package_size){
 
 // 写入函数
 bool WriteUserToFile(FILE* fp, const UserData* user) {
-    return fprintf(fp, "%-*s  %-*s  %-*s  %d  %s  %d\n",
+    return fprintf(fp, "%-*s %-*s %-*s %d %s %d\n",
         NameLen-1, user->name,
         UserNameLen-1, user->userName,
         PinLen-1, user->pin,
@@ -32,7 +32,7 @@ bool WriteUserToFile(FILE* fp, const UserData* user) {
 }
 
 bool WritePackageToFile(FILE* fp, const PackageData* package) {
-    return fprintf(fp, "%-*s  %.2f  %.2f  %-*s  %-*s  %s  %s  %s\n",
+    return fprintf(fp, "%-*s %.2f %.2f %-*s %-*s %s %s %s\n",
         NameLen-1, package->name,
         package->weight,
         package->fee,
@@ -46,12 +46,12 @@ bool WritePackageToFile(FILE* fp, const PackageData* package) {
 bool WriteInventoryStatusToFile(FILE* fp, const ShelfNode* shelf){
     return fprintf(fp, "%d   %.2f\n",
         shelf->packageCnt,
-        shelf->remainSpace)==2;
+        shelf->remainSpace) != -1;
 }
 // 读取函数
 bool ReadUserFromFile(FILE* fp, UserData* user) {
     char type_str[20];
-    int result = fscanf(fp,"%10s %20s %20s %d %20s %d",
+    int result = fscanf(fp,"%31s %31s %21s %d %20s %d",
         user->name,
         user->userName,
         user->pin,
@@ -65,7 +65,7 @@ bool ReadUserFromFile(FILE* fp, UserData* user) {
 
 bool ReadPackageFromFile(FILE* fp, PackageData* package) {
     char type_str[20], status_str[20], size_str[20];
-    int result = fscanf(fp,"%10s %f %f %50s %5s %s %s %s",
+    int result = fscanf(fp,"%31s %f %f %51s %9s %s %s %s",
         package->name,
         &package->weight,
         &package->fee,

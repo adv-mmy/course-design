@@ -124,8 +124,10 @@ void userLoginFlow() {
     UserData* user = authenticateUser(appSystem.userList, account, password);
     if (user!=NULL) {
         if (user->permission) {
+            system("cls");
             adminDashboard(user);
         } else {
+            system("cls");
             userDashboard(user);
         }
     } else {
@@ -183,11 +185,12 @@ void adminDashboard(UserData* admin) {
         fputs(admin->name, stdout);
         printf("\n");
         printf("\n=== 管理控制台 ===\n");
-        printf("1. 查看库存状态\n");           //按顺序打印各货架当前剩余空间                                  
+        printf("1. 查看货架状态\n");           //按顺序打印各货架当前剩余空间                                  
         printf("2. 包裹寄出登记\n");
         printf("3. 新入库包裹登记\n");
-        printf("4. 返回主菜单\n");
-        printf("5. 退出系统\n");
+        printf("4. 查看全部包裹信息\n");
+        printf("5. 返回主菜单\n");
+        printf("6. 退出系统\n");
         printf("请选择操作: \n");
 
         int choice;
@@ -204,8 +207,9 @@ void adminDashboard(UserData* admin) {
             }
             case 2: sentParcelRecording(appSystem.packageList, appSystem.inventoryB); break;
             case 3: addNewParcelToList(&appSystem.packageList, appSystem.inventoryA); break;    //向待取区加入新包裹
-            case 4: return;
-            case 5: appSystem.isRunning = 0; break;
+            case 4: displayPackageList(appSystem.packageList); break;
+            case 5: return;
+            case 6: appSystem.isRunning = 0; break;
             default: {
                 printf("无效操作！请重新输入选项！\n");
                 while(getchar()!='\n');

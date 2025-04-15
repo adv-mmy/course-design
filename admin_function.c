@@ -16,13 +16,13 @@ void displayInventoryStatus(InventoryManagement* inventory){
 
 void sentParcelRecording(PackageData* packageList, InventoryManagement* inventory){
   char sender[NameLen];
-  printf("请输入寄件人姓名：\n");
-  fgets(sender, NameLen, stdin);
-  
+  if(StrInputValidation("姓名",NameLen,0,sender))
+    return;
   PackageData* cur= packageList;
+  printf("该用户的所有待寄包裹的运单号：\n");
   while(cur!=NULL){
     if(cur->packageStatus==pendingSend){
-      printf("寄往%s的包裹\n", cur->address);
+      printf("%s\n", cur->pickUpCode);
       int choice=0;
       printf("选择1以出库该包裹，选择0以跳过该条信息\n");
       scanf("%d", &choice);
@@ -68,8 +68,10 @@ void addNewParcelToList(PackageData** packageList, InventoryManagement* inventor
   newPackage->address[AddressLen-1] = '\0';
 
   //收件人姓名
-  printf("请输入收件人姓名：\n");
-  fgets(newPackage->name, NameLen, stdin);
+  if(StrInputValidation("收件人姓名",NameLen,0,newPackage->name)){
+    free(newPackage);
+    return;
+}
 
   //包装类型
   int choice=0;
@@ -129,4 +131,79 @@ void addNewParcelToList(PackageData** packageList, InventoryManagement* inventor
   addParcelToInventory(inventory, *packageList);
   printf("入库成功！单击回车以返回\n");
   while(getchar()!='\n');
+}
+
+//展示包裹列表
+void displayPackageList(PackageData* packageList){
+  int choice;
+  printf("请输入数字以选择您要查找的记录类型：\n1.收件 2.寄件\n");
+  scanf("%d", &choice);
+  while(getchar()!='\n');
+  PackageData* tmpPtr=packageList;
+  int choiceIsPass=0;
+  while(!choiceIsPass){
+    switch(choice){
+      case 1:{    //查询所有收到的包裹
+        choiceIsPass=1;
+        printf("待取件：\n");
+        while(tmpPtr!=NULL){
+          if(tmpPtr->packageStatus==pendingPickup){
+            fputs(tmpPtr->pickUpCode, stdout);
+            printf("\n");
+          }
+          tmpPtr=tmpPtr->nextPackageData;
+        }
+        tmpPtr=packageList;
+        printf("已签收：\n");
+        while(tmpPtr!=NULL){
+          if(tmpPtr->packageStatus==pickedUp){
+            fputs(tmpPtr->pickUpCode, stdout);
+            printf("\n");
+          }
+          tmpPtr=tmpPtr->nextPackageData;
+        }
+        break;  
+      }
+      case 2:{
+        choiceIsPass=1;
+        printf("未寄出：\n");
+        while(tmpPtr!=NULL){
+          if(tmpPtr->packageStatus==pendingSend){
+            fputs(tmpPtr->pickUpCode, stdout);
+            printf("\n");
+          }
+          tmpPtr=tmpPtr->nextPackageData;
+        }
+        tmpPtr=packageList;
+        printf("已寄出：\n");
+        while(tmpPtr!=NULL){
+          if(tmpPtr->packageStatus==sent){
+            fputs(tmpPtr->pickUpCode, stdout);
+            printf("\n");
+          }
+          tmpPtr=tmpPtr->nextPackageData;
+        }
+        tmpPtr=packageList;
+        printf("已取消：\n");
+        while(tmpPtr!=NULL){
+          if(tmpPtr->packageStatus==wrong4){
+            fputs(tmpPtr->pickUpCode, stdout);
+            printf("\n");
+          }
+          tmpPtr=tmpPtr->nextPackageData;
+        }
+        break;
+      }
+      default:{            //若输入非法则循环到获得符合要求的输入
+        printf("请输入1或2以选择：");
+        scanf("%d", &choice);
+        while(getchar()!='\n');
+      }
+    }
+  }
+  
+  tmpPtr=NULL;
+  free(tmpPtr);
+  printf("已展示所有历史记录，单击回车以返回\n");
+  while(getchar()=='\n')return;
 }

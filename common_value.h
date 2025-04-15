@@ -1,11 +1,11 @@
 #ifndef COMMON_VALUE_H
 #define COMMON_VALUE_H
 
-#define NameLen         50   
-#define UserNameLen     50   
+#define NameLen         31   
+#define UserNameLen     31   
 #define PinLen          21
 #define TimeLen         11  
-#define AddressLen     100  
+#define AddressLen      51  
 #define UserPermission  0    
 #define AdminPermission 1     
 #define MaxPackages 2000 

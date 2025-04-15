@@ -1,74 +1,74 @@
 @startuml
-class UserAccount {
-    - name: char[50]
-    - account: char[20]
-    - password: char[20]
-    - permissionType: enum{Admin, User}
-    - userType: enum{Student, Staff, Outsider}
-    - isNewUser: bool
-    - orderCount: int
-    + next: UserAccount*
-    + createUserAccount()
-    + modifyUserInfo()
-    + calculateFinalDiscount(): float
+
+' 定义核心类
+class UserData {
+  - name[NameLen]
+  - userName[UserNameLen]
+  - pin[PinLen]
+  - permission: bool
+  - userType: enum
+  - numOfDiscount: int
+  + nextUserData: UserData*
 }
 
-class Parcel {
-    - parcelId: char[20]
-    - userName: char[50]
-    - weight: float
-    - volume: float
-    - inTime: struct tm
-    - parcelType: enum{Mail, Small, Medium, Large, XLarge}
-    - status: enum{PendingPickup, PendingSend, PickedUp, Sent}
-    - pickupCode: char[10]
-    - fee: float
-    + next: Parcel*
-    + calculateFee(UserAccount*)
-    + generatePickupCode(int)
-    + logStatusChange()
+class PackageData {
+  - volume: float
+  - pickUpCode[PickupCodeLen]
+  - packageType: enum
+  - packageStatus: enum
+  - packageSize: enum
+  + nextPackageData: PackageData*
 }
 
 class InventoryManagement {
-    - shelves: ShelfNode*
-    + allocateShelf(Parcel*): bool
-    + optimizeSpaceAllocation()
-    + checkSaturation(): void
-    + updateShelfSpace(int, float)
+  - shelves: ShelfNode*
+  - totalShelves: int
+  - warningThreshold: float
+  + createInventorySystem()
+  + findBestShelf()
+  + addParcelToInventory()
 }
 
 class ShelfNode {
-    - level: int
-    - remainingSpace: float
-    + next: ShelfNode*
+  - level: int
+  - packageCnt: int
+  - remainSpace: float
+  + nextShelfNode: ShelfNode*
 }
 
-class SystemManager {
-    - userList: UserAccount*
-    - parcelList: Parcel*
-    - inventory: InventoryManagement*
-    - fileHandler: FileHandler*
-    - notification: Notification*
-    + calculateShippingFee(Parcel*): float
-    + handleParcelStatus(Parcel*)
-    + generateTimeRangeReport(time_t, time_t)
+class FileIO {
+  + WriteUserToFile()
+  + ReadPackageFromFile()
+  + WriteInventoryStatusToFile()
 }
 
-class FileHandler {
-    + saveUserData(UserAccount*)
-    + loadUserData(UserAccount**)
-    + logParcelStatus(Parcel*)
-    + saveInventoryData(ShelfNode*)
+' 定义关系
+UserData "1" *-- "0..*" PackageData : 拥有
+InventoryManagement "1" *-- "1..*" ShelfNode : 管理
+FileIO ..> UserData : 读写
+FileIO ..> PackageData : 读写
+FileIO ..> ShelfNode : 读写
+
+' 定义枚举类型
+enum UserType {
+  student
+  teacher
+  others
 }
 
-class Notification {
-    + sendReminder(UserAccount*, const char*)
-    + verifyPickupIdentity(UserAccount*, const char*): bool
+enum PackageStatus {
+  pendingPickup
+  pickedUp
+  pendingSend
+  sent
 }
 
-SystemManager "1" --> "1" InventoryManagement : manages
-SystemManager "1" --> "1" FileHandler : uses
-SystemManager "1" --> "1" Notification : triggers
-UserAccount "1" --> "*" Parcel : owns
-InventoryManagement "1" --> "10" ShelfNode : contains
+enum PackageSize {
+  mail
+  small
+  medium
+  large
+  extraLarge
+}
+
 @enduml

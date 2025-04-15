@@ -6,9 +6,11 @@
 #include<string.h>
 #include"common_value.h"
 #include"inventory_management.h"
+#include"data_storage.h"
 
 void displayInventoryStatus(InventoryManagement* inventory);
 void sentParcelRecording(PackageData* packageList, InventoryManagement* inventory);
 void addNewParcelToList(PackageData** packageList, InventoryManagement* inventory);
+void displayPackageList(PackageData* packageList);
 
 #endif

@@ -120,7 +120,7 @@ return false;
 
 //参数分别是输入字符串名称，控制长度，是否允许汉字，目标字符串地址
 bool StrInputValidation(const char* InputType,int InputLenth,int ValidationType,char* StrDestination){
-    printf("请输入%s：\n" ,InputType);
+    printf("请输入%s（输入-1以返回）：\n" ,InputType);
     char inputStr[1024];
             fgets(inputStr, 1024, stdin);
     switch (ValidationType){
