@@ -32,6 +32,7 @@ enum PackageStatus{       //包裹当前状态
     pickedUp,             //已取
     pendingSend,          //待寄
     sent,                 //已寄;
+    canceled,
     wrong4
 };
 

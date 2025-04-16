@@ -366,12 +366,12 @@ void cancelSending(UserData* user, PackageData** packageList, InventoryManagemen
   int found = 0;
 
   char targetPickUpCode[PickupCodeLen];
-  StrInputValidation("您要取消的包裹的取件码", PickupCodeLen, 1, targetPickUpCode);
+  StrInputValidation("您要取消的包裹的运单号", PickupCodeLen, 1, targetPickUpCode);
 
   while (current != NULL) {
     if (strcmp(current->name, user->name) == 0 && strcmp(current->pickUpCode, targetPickUpCode) == 0 && current->packageStatus == pendingSend) {
         found = 1;
-        current->packageStatus = wrong4;
+        current->packageStatus = canceled;
         replaceParcelFromInventory(current, inventory);
         break;
     }
@@ -437,7 +437,7 @@ void displayUserHistory(UserData* user, PackageData* packageList){
         tmpPtr=packageList;
         printf("已取消：\n");
         while(tmpPtr!=NULL){
-          if(strcmp(tmpPtr->name, user->name) == 0 && tmpPtr->packageStatus==wrong4){
+          if(strcmp(tmpPtr->name, user->name) == 0 && tmpPtr->packageStatus==canceled){
             fputs(tmpPtr->pickUpCode, stdout);
             printf("\n");
           }

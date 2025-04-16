@@ -1,5 +1,5 @@
 ÅË³þÑô                         111.00 77.40 111                                                B-01-001 toSend sent small
 test                           111.00 109.00 111                                                B-01-002 toSend sent mail
-test                           111.00 109.00 111                                                B-01-003 toSend pendingSend mail
+test                           111.00 109.00 111                                                B-01-003 toSend canceled mail
 test                           0.00 0.00 unknown                                            A-01-001 toPickup pendingPickup extraLarge
 test                           0.00 0.00 unknown                                            A-02-001 toPickup pendingPickup extraLarge

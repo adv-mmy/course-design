@@ -150,7 +150,7 @@ bool StrInputValidation(const char* InputType,int InputLenth,int ValidationType,
 
             for(int i=0;inputStr[i]!='\0';i++){//<-检验中文输入
                 if(inputStr[i]<=33||inputStr[i]>=126){
-                    printf("请不要输入全角字符，中文或空格，程序看不懂捏:->");
+                    printf("请不要输入全角字符，中文或空格，程序看不懂捏:)");
                     printf("请重新输入：\n");
                     fgets(inputStr, 1024, stdin);
                     flag=1;
