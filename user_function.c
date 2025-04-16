@@ -189,10 +189,11 @@ void sendParcel(PackageData** packageList, UserData* user, InventoryManagement* 
     user->numOfDiscount--;
   }
   //活动满减（每满20减2）
+  printf("您被发件优惠活动砸中！运费每满20元减2元！您的包裹优惠前运费为%.2f，", costOfMoney);
   costOfMoney-=(int)(costOfMoney/20)*2;
 
   newPackage->fee=costOfMoney;
-  printf("您的包裹所需运费为：%.2f元，单击回车以返回\n", costOfMoney);
+  printf("优惠后运费为：%.2f元，单击回车以返回\n", costOfMoney);
   getchar();
   while(getchar()!='\n');
   
