@@ -56,7 +56,8 @@ void userRegisterFlow(UserData** userList) {
     UserData* judger = *userList;
     while(judger!=NULL){
         if(strcmp(newUser->name,judger->name)==0 || strcmp(newUser->userName,judger->userName)==0){
-            printf("该账号信息已存在！\n");
+            printf("该账号信息已存在！单击任意按键以返回\n");
+            getchar();
             free(newUser);
             return;
         }
