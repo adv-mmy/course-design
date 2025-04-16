@@ -232,8 +232,9 @@ void getParcelFromInventory(UserData* user, PackageData* packageList, InventoryM
     tmpPtr=tmpPtr->nextPackageData;
   }
   if(!targetIsFound){
-    printf("错误的取件码！\n");
-    while(getchar()=='\n')return;
+    printf("错误的取件码！单击回车以返回\n");
+    while(getchar()!='\n');
+    return;
   }else{
     printf("找到包裹！请输入您的密码以取走包裹!\n");
     char targetPassword[PinLen];
@@ -436,10 +437,9 @@ void modifyUserProfile(UserData* user){
       case 1:{
         choiceIsPass=1;
         if(StrInputValidation("您的新用户名",UserNameLen,0,user->userName)){
-          free(user);
           return;
         }
-        printf("您的用户名修改成功！");
+        printf("您的用户名修改成功！\n");
         break;
       }
       case 2:{
