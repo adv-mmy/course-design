@@ -432,6 +432,7 @@ void modifyUserProfile(UserData* user){
   int choiceIsPass=0;
   printf("请输入数字以选择您要修改的信息：\n1.用户名 2，密码\n");
   scanf("%d", &choice);
+  getchar();
   while(!choiceIsPass){
     switch (choice){
       case 1:{
