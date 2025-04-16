@@ -122,6 +122,7 @@ void userRegisterFlow(UserData** userList) {
     newUser->nextUserData = NULL; // 明确标记尾节点
 
     printf("注册成功！\n");
+    while(getchar()!='\n');
 }
 
 //检查输入帐密是否与已有用户匹配
