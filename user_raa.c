@@ -51,7 +51,7 @@ void userRegisterFlow(UserData** userList) {
     {
         free(newUser);
         return;
-    };
+    }
     //ÖØ¸´×¢²á¼ì²â
     UserData* judger = *userList;
     while(judger!=NULL){
