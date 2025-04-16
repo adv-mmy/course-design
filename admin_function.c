@@ -54,7 +54,7 @@ void addNewParcelToList(PackageData** packageList, InventoryManagement* inventor
     perror("内存分配失败");
     return;
   }
-  char defaultPickupCode[PickupCodeLen]="0-00-000";   //入库时在取件码（单号）位置分配占位符
+
   char defaultAddress[AddressLen]="unknown";
   
   newPackage->nextPackageData=NULL;
@@ -63,16 +63,14 @@ void addNewParcelToList(PackageData** packageList, InventoryManagement* inventor
   newPackage->fee=0;
   newPackage->weight=0;
 
-  strncpy(newPackage->pickUpCode, defaultPickupCode, PickupCodeLen - 1);
-  newPackage->pickUpCode[PickupCodeLen - 1] = '\0';
-  strncpy(newPackage->address, defaultAddress, AddressLen-1);
-  newPackage->address[AddressLen-1] = '\0';
+  strcpy(newPackage->pickUpCode, "0-00-000");     //入库时在取件码（单号）位置分配占位符
+  strcpy(newPackage->address, defaultAddress);
 
   //收件人姓名
   if(StrInputValidation("收件人姓名",NameLen,0,newPackage->name)){
     free(newPackage);
     return;
-}
+  }
 
   //包装类型
   int choice=0;
@@ -117,19 +115,16 @@ void addNewParcelToList(PackageData** packageList, InventoryManagement* inventor
   newPackage->volume=PackageSizeToVolume(newPackage->packageSize);
   //将新包裹加入到包裹列表尾部
   if (*packageList == NULL) {
-    // 链表为空，直接设置为头节点
-    *packageList = newPackage;
+    *packageList = newPackage; // 链表为空，直接设为头节点
   } else {
-    // 遍历到链表尾部
     PackageData* current = *packageList;
-    while (current!= NULL) {
+    while (current->nextPackageData != NULL) { // 找到最后一个节点
         current = current->nextPackageData;
     }
-    current = newPackage;
+    current->nextPackageData = newPackage; // 正确链接
   }
-  newPackage->nextPackageData = NULL; // 明确标记尾节点
 
-  addParcelToInventory(inventory, *packageList);
+  addParcelToInventory(inventory, newPackage);
   printf("入库成功！单击回车以返回\n");
   while(getchar()!='\n');
 }
