@@ -160,7 +160,7 @@ void sendParcel(PackageData** packageList, UserData* user, InventoryManagement* 
         }
         getchar();
         char targetAddress[AddressLen];
-        if(StrInputValidation("您的送件地址", AddressLen, 0, targetAddress)){
+        if(StrInputValidation("您希望的取件地址", AddressLen, 0, targetAddress)){
           return;
         }
         choiceIsPass=1;
@@ -333,7 +333,7 @@ void getParcelFromInventory(UserData* user, PackageData* packageList, InventoryM
         }
         getchar();
         char targetAddress[AddressLen];
-        if(StrInputValidation("您的送件地址", AddressLen, 0, targetAddress)){
+        if(StrInputValidation("您希望的送件地址", AddressLen, 0, targetAddress)){
           return;
         }
         choiceIsPass=1;
