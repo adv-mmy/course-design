@@ -21,7 +21,7 @@ void sentParcelRecording(PackageData* packageList, InventoryManagement* inventor
   PackageData* cur= packageList;
   printf("该用户的所有待寄包裹的运单号：\n");
   while(cur!=NULL){
-    if(cur->packageStatus==pendingSend){
+    if(cur->packageStatus==pendingSend && strcmp(cur->name, sender) == 0){
       printf("%s\n", cur->pickUpCode);
       int choice=0;
       printf("选择1以出库该包裹，选择0以跳过该条信息\n");
@@ -31,9 +31,10 @@ void sentParcelRecording(PackageData* packageList, InventoryManagement* inventor
         if(choice==1){
           cur->packageStatus=sent;
           replaceParcelFromInventory(cur, inventory);
-          continue;
+          printf("该包裹出库成功！\n");
+          break;
         }else if(choice==0){
-          continue;
+          break;
         }else{
           printf("请输入正确的选项！\n");
           scanf("%d", &choice);
