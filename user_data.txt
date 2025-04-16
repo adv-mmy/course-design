@@ -1,4 +1,4 @@
-test                           111                            111                  0 student 1
+test                           111                            111                  0 student 0
 ÂíÅ£±Æ                         ÕæÅ£±Æ                         1231                 0 teacher 6
 pcy                            admin                          111                  1 others 6
 ÅË³şÑô                         222                            222                  0 student 6

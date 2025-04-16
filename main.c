@@ -160,7 +160,7 @@ void userDashboard(UserData* user) {
         system("cls");
         switch (choice) {
             case 1: getParcelFromInventory(user, appSystem.packageList, appSystem.inventoryA); break;     //È¡¼þ
-            case 2: createParcel(&appSystem.packageList, user, appSystem.inventoryB); break;
+            case 2: sendParcel(&appSystem.packageList, user, appSystem.inventoryB); break;
             case 3: cancelSending(user, &appSystem.packageList, appSystem.inventoryB); break; 
             case 4: displayUserHistory(user, appSystem.packageList); break;
             case 5: modifyUserProfile(user); break;

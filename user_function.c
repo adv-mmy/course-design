@@ -1,12 +1,13 @@
 #include"user_function.h"
 
-void createParcel(PackageData** packageList, UserData* user, InventoryManagement* inventory){
+void sendParcel(PackageData** packageList, UserData* user, InventoryManagement* inventory){
   PackageData* newPackage=(PackageData*)malloc(sizeof(PackageData));
   if (!newPackage) {
     perror("内存分配失败");
     return;
   }
   
+  strcpy(newPackage->name, user->name);
   newPackage->packageType=toSend;
   newPackage->packageStatus=pendingSend;
   strcpy(newPackage->pickUpCode, "0-00-000");
@@ -14,9 +15,10 @@ void createParcel(PackageData** packageList, UserData* user, InventoryManagement
   int choice=0;
   float costOfMoney=0;
   float weightOfPackage=0;
+  char recieverName[NameLen];
   
   //收件人姓名
-  if(StrInputValidation("收件人姓名",NameLen,0,newPackage->name)){
+  if(StrInputValidation("收件人姓名",NameLen,0,recieverName)){
         free(newPackage);
         return;
     }
@@ -136,16 +138,24 @@ void createParcel(PackageData** packageList, UserData* user, InventoryManagement
           // 检查转换后的月份和日期是否与输入的一致
           if (target_tm.tm_mon + 1 != month || target_tm.tm_mday != day) {
             printf("输入的日期无效。\n");
+            while(getchar()!='\n');
+            continue;
           }
 
           // 比较时间
           if (target_time == -1) {
             printf("错误：无效的日期！\n");
+            while(getchar()!='\n');
+            continue;
           } else if (target_time < now) {
             printf("输入的时间已过。\n");
+            while(getchar()!='\n');
+            continue;
           } else {
             printf("预约成功！\n");
             timeIsLegal=1;
+            while(getchar()!='\n');
+            continue;
           }
         }
         choiceIsPass=1;
@@ -292,16 +302,24 @@ void getParcelFromInventory(UserData* user, PackageData* packageList, InventoryM
           // 检查转换后的月份和日期是否与输入的一致
           if (target_tm.tm_mon + 1 != month || target_tm.tm_mday != day) {
             printf("输入的日期无效。\n");
+            while(getchar()!='\n');
+            continue;
           }
 
           // 比较时间
           if (target_time == -1) {
             printf("错误：无效的日期！\n");
+            while(getchar()!='\n');
+            continue;
           } else if (target_time < now) {
             printf("输入的时间已过。\n");
+            while(getchar()!='\n');
+            continue;
           } else {
             printf("预约成功！\n");
             timeIsLegal=1;
+            while(getchar()!='\n');
+            continue;
           }
         }
         choiceIsPass=1;
@@ -366,7 +384,7 @@ void displayUserHistory(UserData* user, PackageData* packageList){
         choiceIsPass=1;
         printf("待取件：\n");
         while(tmpPtr!=NULL){
-          if(tmpPtr->name== user->name && tmpPtr->packageStatus==pendingPickup){
+          if(strcmp(tmpPtr->name, user->name) == 0 && tmpPtr->packageStatus==pendingPickup){
             fputs(tmpPtr->pickUpCode, stdout);
             printf("\n");
           }
@@ -375,7 +393,7 @@ void displayUserHistory(UserData* user, PackageData* packageList){
         tmpPtr=packageList;
         printf("已签收：\n");
         while(tmpPtr!=NULL){
-          if(tmpPtr->name== user->name && tmpPtr->packageStatus==pickedUp){
+          if(strcmp(tmpPtr->name, user->name) == 0 && tmpPtr->packageStatus==pickedUp){
             fputs(tmpPtr->pickUpCode, stdout);
             printf("\n");
           }
@@ -387,7 +405,7 @@ void displayUserHistory(UserData* user, PackageData* packageList){
         choiceIsPass=1;
         printf("未寄出：\n");
         while(tmpPtr!=NULL){
-          if(tmpPtr->name== user->name && tmpPtr->packageStatus==pendingSend){
+          if(strcmp(tmpPtr->name, user->name) == 0 && tmpPtr->packageStatus==pendingSend){
             fputs(tmpPtr->pickUpCode, stdout);
             printf("\n");
           }
@@ -396,7 +414,7 @@ void displayUserHistory(UserData* user, PackageData* packageList){
         tmpPtr=packageList;
         printf("已寄出：\n");
         while(tmpPtr!=NULL){
-          if(tmpPtr->name== user->name && tmpPtr->packageStatus==sent){
+          if(strcmp(tmpPtr->name, user->name) == 0 && tmpPtr->packageStatus==sent){
             fputs(tmpPtr->pickUpCode, stdout);
             printf("\n");
           }
@@ -405,7 +423,7 @@ void displayUserHistory(UserData* user, PackageData* packageList){
         tmpPtr=packageList;
         printf("已取消：\n");
         while(tmpPtr!=NULL){
-          if(tmpPtr->name== user->name && tmpPtr->packageStatus==wrong4){
+          if(strcmp(tmpPtr->name, user->name) == 0 && tmpPtr->packageStatus==wrong4){
             fputs(tmpPtr->pickUpCode, stdout);
             printf("\n");
           }
@@ -447,10 +465,11 @@ void modifyUserProfile(UserData* user){
         choiceIsPass=1;
         char newPassword[PinLen], newPasswordConfirmer[PinLen];
         if(StrInputValidation("您的新密码",PinLen,1,newPassword)){
-        return;
-    };
-        printf("请再次输入密码以确认：\n");
-        fgets(newPasswordConfirmer, PinLen, stdin);
+          return;
+        };
+        if(StrInputValidation("您的新密码以确认",PinLen,1,newPasswordConfirmer)){
+          return;
+        };
         int confirmer=0;
         while(!confirmer){
           if(strcmp(newPassword, newPasswordConfirmer)==0){
