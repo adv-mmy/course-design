@@ -158,6 +158,11 @@ void sendParcel(PackageData** packageList, UserData* user, InventoryManagement* 
             continue;
           }
         }
+        getchar();
+        char targetAddress[AddressLen];
+        if(StrInputValidation("您的送件地址", AddressLen, 0, targetAddress)){
+          return;
+        }
         choiceIsPass=1;
         break;
       }
@@ -231,7 +236,9 @@ void searchParcelInterface(UserData* user, PackageData* packageList){
 
 void getParcelFromInventory(UserData* user, PackageData* packageList, InventoryManagement* inventory){
   char targetPickUpCode[PickupCodeLen];
-  StrInputValidation("取件码", PickupCodeLen, 1, targetPickUpCode);
+  if(StrInputValidation("取件码", PickupCodeLen, 1, targetPickUpCode)){
+    return;
+  }
   PackageData* tmpPtr=packageList;
   int targetIsFound=0;
   while(tmpPtr!=NULL){
@@ -248,7 +255,9 @@ void getParcelFromInventory(UserData* user, PackageData* packageList, InventoryM
   }else{
     printf("找到包裹！请输入您的密码以取走包裹!\n");
     char targetPassword[PinLen];
-    StrInputValidation("您的密码", PinLen, 1, targetPassword);
+    if(StrInputValidation("您的密码", PinLen, 1, targetPassword)){
+      return;
+    }
     int passwordIsCorrect=0;
     while(!passwordIsCorrect){
       if(strcmp(targetPassword, user->pin) == 0){
@@ -321,6 +330,11 @@ void getParcelFromInventory(UserData* user, PackageData* packageList, InventoryM
             while(getchar()!='\n');
             continue;
           }
+        }
+        getchar();
+        char targetAddress[AddressLen];
+        if(StrInputValidation("您的送件地址", AddressLen, 0, targetAddress)){
+          return;
         }
         choiceIsPass=1;
         break;
@@ -466,10 +480,10 @@ void modifyUserProfile(UserData* user){
         char newPassword[PinLen], newPasswordConfirmer[PinLen];
         if(StrInputValidation("您的新密码",PinLen,1,newPassword)){
           return;
-        };
+        }
         if(StrInputValidation("您的新密码以确认",PinLen,1,newPasswordConfirmer)){
           return;
-        };
+        }
         int confirmer=0;
         while(!confirmer){
           if(strcmp(newPassword, newPasswordConfirmer)==0){
