@@ -1,9 +1,9 @@
 test                           111                            111                  0 student 0
-张三                     法外狂徒                             123                  0 student 0
-马牛逼                 站牛逼                                 123                  0 others 6
-李思雨                   路人甲	                        123                 	0 student 6
-张子轩                  爱玩原神	                        123                  0 student 6
-刘欣怡		     不洗脚				         123			0 student 6
-陈俊杰		     编不了				        123			0 student 6
-杨若曦		      不吃香菜				123			0 student 6
-admin                 admin                                  111                 1 others 6  
+张三                           法外狂徒                       123                  0 student 0
+马牛逼                         站牛逼                         123                  0 others 6
+李思雨                         路人甲                         123                  0 student 6
+张子轩                         爱玩原神                       123                  0 student 6
+刘欣怡                         不洗脚                         123                  0 student 6
+陈俊杰                         编不了                         123                  0 student 6
+杨若曦                         不吃香菜                       123                  0 student 6
+admin                          admin                          111                  1 others 6
