@@ -46,7 +46,7 @@ void sendParcel(PackageData** packageList, UserData* user, InventoryManagement* 
   }
   
   //包装类型
-  printf("请输入需要的包装物料类型：\n1.邮件 2.小包裹 3.中包裹 4.大包裹 5.特大包裹\n");
+  printf("请输入需要的包装物料类型：\n1.邮件（1元） 2.小包裹（2元） 3.中包裹（5元） 4.大包裹（10元） 5.特大包裹（15元）\n");
   scanf("%d", &choice);
 
   int choiceIsPass=0;
@@ -189,7 +189,7 @@ void sendParcel(PackageData** packageList, UserData* user, InventoryManagement* 
     user->numOfDiscount--;
   }
   //活动满减（每满20减2）
-  printf("您被发件优惠活动砸中！运费每满20元减2元！您的包裹优惠前运费为%.2f，", costOfMoney);
+  printf("您被发件优惠活动砸中！运费每满20元减2元！您的包裹优惠前运费为：%.2f，", costOfMoney);
   costOfMoney-=(int)(costOfMoney/20)*2;
 
   newPackage->fee=costOfMoney;
@@ -221,14 +221,14 @@ void searchParcelInterface(UserData* user, PackageData* packageList){
   int cnt=0;
   printf("这些包裹可能是您的：\n");
   while(tmpPtr!=NULL){
-    if(user->name==tmpPtr->name && tmpPtr->packageStatus==pendingPickup){
+    if(strcmp(user->name, tmpPtr->name) == 0 && tmpPtr->packageStatus==pendingPickup){
       printf("%s\n", tmpPtr->pickUpCode);
       cnt++;
     }
     tmpPtr=tmpPtr->nextPackageData;
   }
   if(!cnt){
-    printf("\n暂无待取包裹\n");
+    printf("\n**暂无待取包裹**\n");
   }
   tmpPtr=NULL;
   free(tmpPtr);
@@ -547,4 +547,13 @@ void deleteUser(UserData** userList, const char* userName) {
         prev = current;
         current = current->nextUserData;
     }
+}
+//展示当前用户信息
+void displayUserInformation(UserData* user){
+  printf("实名信息：%s\n", user->name);
+  printf("账号：%s\n", user->userName);
+  printf("用户类型：%s\n", UserTypeToStr(user->userType));
+  printf("密码：%s\n", user->pin);
+  printf("新用户优惠剩余次数：%d\n", user->numOfDiscount);
+  getchar();
 }

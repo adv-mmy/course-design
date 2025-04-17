@@ -17,5 +17,6 @@ void cancelSending(UserData* user, PackageData** packageList, InventoryManagemen
 void displayUserHistory(UserData* user, PackageData* packageList);
 void modifyUserProfile(UserData* user);
 void deleteUser(UserData** userList, const char* userName);
+void displayUserInformation(UserData* user);
 
 #endif

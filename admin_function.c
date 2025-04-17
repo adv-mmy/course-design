@@ -2,13 +2,10 @@
 
 void displayInventoryStatus(InventoryManagement* inventory){
   ShelfNode* currentShelf=inventory->shelves;
-  int cnt=0;
   while(currentShelf!=NULL){
-    printf("第%d层共有包裹%d件，剩余空间：%.2fm\n", currentShelf->level, currentShelf->packageCnt, currentShelf->remainSpace);
-    cnt+=currentShelf->packageCnt;
+    printf("第%d层剩余空间：%.2fm\n", currentShelf->level, currentShelf->remainSpace);
     currentShelf=currentShelf->nextShelfNode;
   }
-  printf("仓库内共有%d件包裹\n", cnt);
   currentShelf=NULL;
   printf("单击回车以进行下一步操作\n");
   while(getchar()=='\n')return;

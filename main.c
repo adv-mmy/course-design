@@ -148,10 +148,11 @@ void userDashboard(UserData* user) {
         printf("2. 寄送包裹\n");
         printf("3. 取消寄件\n");
         printf("4. 查看历史包裹\n");
-        printf("5. 修改个人信息\n");   
-        printf("6. 注销账号\n");
-        printf("7. 返回主菜单\n");
-        printf("8. 退出系统\n");
+        printf("5. 查看个人信息\n");
+        printf("6. 修改个人信息\n");   
+        printf("7. 注销账号\n");
+        printf("8. 返回主菜单\n");
+        printf("9. 退出系统\n");
         printf("请选择操作: \n");
 
         int choice;
@@ -163,12 +164,13 @@ void userDashboard(UserData* user) {
             case 2: sendParcel(&appSystem.packageList, user, appSystem.inventoryB); break;
             case 3: cancelSending(user, &appSystem.packageList, appSystem.inventoryB); break; 
             case 4: displayUserHistory(user, appSystem.packageList); break;
-            case 5: modifyUserProfile(user); break;
-            case 6: 
+            case 5: displayUserInformation(user); break;
+            case 6: modifyUserProfile(user); break;
+            case 7: 
                 deleteUser(&appSystem.userList, user->userName);
                 return;
-            case 7: return;
-            case 8: appSystem.isRunning = 0; break;
+            case 8: return;
+            case 9: appSystem.isRunning = 0; break;
             default: {
                 printf("无效操作！请重新输入选项！\n");
                 while(getchar()!='\n');
