@@ -142,6 +142,12 @@ void displayPackageList(PackageData* packageList){
         while(tmpPtr!=NULL){
           if(tmpPtr->packageStatus==pendingPickup){
             fputs(tmpPtr->pickUpCode, stdout);
+            printf("   ");
+            fputs(tmpPtr->name, stdout);
+            printf("   ");
+            fputs(tmpPtr->address, stdout);
+            printf("   ");
+            fputs(PackageSizeToStr(tmpPtr->packageSize), stdout);
             printf("\n");
           }
           tmpPtr=tmpPtr->nextPackageData;
@@ -151,6 +157,12 @@ void displayPackageList(PackageData* packageList){
         while(tmpPtr!=NULL){
           if(tmpPtr->packageStatus==pickedUp){
             fputs(tmpPtr->pickUpCode, stdout);
+            printf("   ");
+            fputs(tmpPtr->name, stdout);
+            printf("   ");
+            fputs(tmpPtr->address, stdout);
+            printf("   ");
+            fputs(PackageSizeToStr(tmpPtr->packageSize), stdout);
             printf("\n");
           }
           tmpPtr=tmpPtr->nextPackageData;
@@ -163,6 +175,12 @@ void displayPackageList(PackageData* packageList){
         while(tmpPtr!=NULL){
           if(tmpPtr->packageStatus==pendingSend){
             fputs(tmpPtr->pickUpCode, stdout);
+            printf("   ");
+            fputs(tmpPtr->name, stdout);
+            printf("   ");
+            fputs(tmpPtr->address, stdout);
+            printf("   ");
+            fputs(PackageSizeToStr(tmpPtr->packageSize), stdout);
             printf("\n");
           }
           tmpPtr=tmpPtr->nextPackageData;
@@ -172,6 +190,12 @@ void displayPackageList(PackageData* packageList){
         while(tmpPtr!=NULL){
           if(tmpPtr->packageStatus==sent){
             fputs(tmpPtr->pickUpCode, stdout);
+            printf("   ");
+            fputs(tmpPtr->name, stdout);
+            printf("   ");
+            fputs(tmpPtr->address, stdout);
+            printf("   ");
+            fputs(PackageSizeToStr(tmpPtr->packageSize), stdout);
             printf("\n");
           }
           tmpPtr=tmpPtr->nextPackageData;
@@ -179,8 +203,14 @@ void displayPackageList(PackageData* packageList){
         tmpPtr=packageList;
         printf("ÒÑÈ¡Ïû£º\n");
         while(tmpPtr!=NULL){
-          if(tmpPtr->packageStatus==wrong4){
+          if(tmpPtr->packageStatus==canceled){
             fputs(tmpPtr->pickUpCode, stdout);
+            printf("   ");
+            fputs(tmpPtr->name, stdout);
+            printf("   ");
+            fputs(tmpPtr->address, stdout);
+            printf("   ");
+            fputs(PackageSizeToStr(tmpPtr->packageSize), stdout);
             printf("\n");
           }
           tmpPtr=tmpPtr->nextPackageData;
